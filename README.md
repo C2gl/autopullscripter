@@ -1,0 +1,1 @@
+a simple bat script to automatically pull all actively folowed git repos
