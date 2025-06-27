@@ -1,11 +1,20 @@
+
 set "waittime=10"
 
-echo off
+set "path1=C:\Users\lieve\Documents\GitHub\blink"
+set "path2=C:\Users\lieve\Documents\GitHub\core"
+set "path3=C:\Users\lieve\Documents\GitHub\csm"
+
+set "count=0"
+
 
 FOR /L %%A in (1,1,100) DO (
     echo %%A
     echo for loop test %%A
-    timeout /t 5
+    cd "%path1%"
+    git pull
+    count = count +1
+    timeout /t 50
 )
 
 cd blink
