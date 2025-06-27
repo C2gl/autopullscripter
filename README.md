@@ -14,3 +14,7 @@ in the (far) future, quite a few features are planned, not to be a usefull repos
 - use the script to download new repos automatically 
 - sort repositories by category and choose what category to pull
 - the ability to have a cron job
+
+# report issues 
+if you see issues, or want to help developing this, feel free to.
+i would be asking to explain why and how since this is mostly a learning project. so i am not looking for stuff to be done in place of me 
