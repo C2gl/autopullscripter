@@ -4,7 +4,7 @@ echo off
 
 FOR /L %%A in (1,1,100) DO (
     echo %%A
-    echo "for loop test + %%A"
+    echo for loop test %%A
     timeout /t 5
 )
 
