@@ -8,9 +8,9 @@ set "path2=C:\Users\lieve\Documents\GitHub\core"
 set "path3=C:\Users\lieve\Documents\GitHub\csm"
 
 set "count=0"
-set "pathcount=4"
+set "pathcount=3"
 
-FOR /L %%A in (1,1,100) DO (
+FOR /L %%A in (1,1,%pathcount%) DO (
     set /a index=%%A %% 3
     if !index! == 1 set "currentPath=!path1!"
     if !index! == 2 set "currentPath=!path2!"
