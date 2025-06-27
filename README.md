@@ -1,7 +1,7 @@
 a simple bat script to automatically pull all actively folowed git repos
 
 # how to use 
-to use this, you can eddit in the [auto_git_pull.bat] the paths to github repositoried you wish to track
+to use this, you can eddit in the [auto_git_pull.bat](https://github.com/C2gl/autopullscripter/blob/main/auto_git_pull.bat) the paths to github repositoried you wish to track
 
 you can see a few existing demo repos to see how this is to be done, a current update is on the way where they way this has to be done should be changed
 
