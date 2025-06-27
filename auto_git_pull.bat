@@ -8,6 +8,7 @@ set "path2=C:\Users\lieve\Documents\GitHub\core"
 set "path3=C:\Users\lieve\Documents\GitHub\csm"
 
 set "count=0"
+set "pathcount=4"
 
 FOR /L %%A in (1,1,100) DO (
     set /a index=%%A %% 3
