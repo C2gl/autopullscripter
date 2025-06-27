@@ -47,7 +47,7 @@ set "count=0"
 set "pathcount=35"
 
 
-:: working for loop
+:: working for loop (should be turned into a function loop)
 FOR /L %%A in (1,1,%pathcount%) DO (
     set /a index=%%A %% %pathcount%
     if !count! == 0 set "currentPath=!path1!"
