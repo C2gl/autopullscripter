@@ -1,8 +1,7 @@
 set "waittime=10" # the waitime between libraries pulls
 
-cd blink
+cd C:\Users\lieve\Documents\Github\Blink
 git pull
-cd ..
 timeout /t %waittime%
 
 cd core
