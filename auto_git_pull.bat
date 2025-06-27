@@ -1,184 +1,104 @@
-set "waittime=10" # the waitime between libraries pulls
+@echo off
+setlocal enabledelayedexpansion
 
-cd blink
-git pull
-cd ..
-timeout /t %waittime%
+:: wait time between pulls in the loop
+set "waittime=3"
 
-cd core
-git pull
-cd ..
-timeout /t %waittime%
+:: defined paths to git repositories
+set "path1=C:\Users\lieve\Documents\GitHub\blink"
+set "path2=C:\Users\lieve\Documents\GitHub\core"
+set "path3=C:\Users\lieve\Documents\GitHub\csm"
+set "path4=C:\Users\lieve\Documents\GitHub\dockge"
+set "path5=C:\Users\lieve\Documents\GitHub\element-x-ios"
+set "path6=C:\Users\lieve\Documents\GitHub\endurain"
+set "path7=C:\Users\lieve\Documents\GitHub\ferrishare"
+set "path8=C:\Users\lieve\Documents\GitHub\filebrowser"
+set "path9=C:\Users\lieve\Documents\GitHub\firefly-iii"
+set "path10=C:\Users\lieve\Documents\GitHub\Fladder"
+set "path11=C:\Users\lieve\Documents\GitHub\grocy"
+set "path12=C:\Users\lieve\Documents\GitHub\immich"
+set "path13=C:\Users\lieve\Documents\GitHub\immich-go"
+set "path14=C:\Users\lieve\Documents\GitHub\jellyfin"
+set "path15=C:\Users\lieve\Documents\GitHub\jellyfin-media-player"
+set "path16=C:\Users\lieve\Documents\GitHub\jellyfin-plugin-streamyfin"
+set "path17=C:\Users\lieve\Documents\GitHub\jellyfin-web"
+set "path18=C:\Users\lieve\Documents\GitHub\jellyfin-webos"
+set "path19=C:\Users\lieve\Documents\GitHub\jellyseerr"
+set "path20=C:\Users\lieve\Documents\GitHub\jellystat"
+set "path21=C:\Users\lieve\Documents\GitHub\ladybird"
+set "path22=C:\Users\lieve\Documents\GitHub\manage-my-damn-life-nextjs"
+set "path23=C:\Users\lieve\Documents\GitHub\nginx-proxy-manager"
+set "path24=C:\Users\lieve\Documents\GitHub\paperless-ai"
+set "path25=C:\Users\lieve\Documents\GitHub\paperless-ngx"
+set "path26=C:\Users\lieve\Documents\GitHub\ProxmoxVE"
+set "path27=C:\Users\lieve\Documents\GitHub\spksrc"
+set "path28=C:\Users\lieve\Documents\GitHub\streamyfin"
+set "path29=C:\Users\lieve\Documents\GitHub\Swiftfin"
+set "path30=C:\Users\lieve\Documents\GitHub\synapse"
+set "path31=C:\Users\lieve\Documents\GitHub\syncthing"
+set "path32=C:\Users\lieve\Documents\GitHub\tailscale"
+set "path33=C:\Users\lieve\Documents\GitHub\tududi"
+set "path34=C:\Users\lieve\Documents\GitHub\tuwunel"
+set "path35=C:\Users\lieve\Documents\GitHub\zigbee2mqtt"
 
-cd csm
-git pull
-cd ..
-timeout /t %waittime%
-
-cd ferrishare
-git pull
-cd ..
-timeout /t %waittime%
-
-cd firefly-iii
-git pull
-cd ..
-timeout /t %waittime%
-
-cd Fladder
-git pull
-cd ..
-timeout /t %waittime%
-
-cd home_server
-git pull
-cd ..
-timeout /t %waittime%
-
-cd immich
-git pull
-cd ..
-timeout /t %waittime%
-
-cd jellyfin
-git pull
-cd ..
-timeout /t %waittime%
-
-cd jellyfin-media-player
-git pull
-cd ..
-timeout /t %waittime%
-
-cd jellyfin-plugin-streamyfin
-git pull
-cd ..
-timeout /t %waittime%
-
-cd jellyfin-web
-git pull
-cd ..
-timeout /t %waittime%
-
-cd jellyfin-webos
-git pull
-cd ..
-timeout /t %waittime%
-
-cd jellystat
-git pull
-cd ..
-timeout /t %waittime%
-
-cd ladybird
-git pull
-cd ..
-timeout /t %waittime%
-
-cd ProxmoxVE
-git pull
-cd ..
-timeout /t %waittime%
-
-cd spksrc
-git pull
-cd ..
-timeout /t %waittime%
-
-cd streamyfin
-git pull
-cd ..
-timeout /t %waittime%
-
-cd streamystats
-git pull
-cd ..
-timeout /t %waittime%
-
-cd Swiftfin
-git pull
-cd ..
-timeout /t %waittime%
-
-cd syncthing
-git pull
-cd ..
-timeout /t %waittime%
-
-cd tailscale
-git pull
-cd ..
-timeout /t %waittime%
-
-cd tuwunel
-git pull
-cd ..
-timeout /t %waittime%
-
-cd zigbee2mqtt
-git pull
-cd ..
-timeout /t %waittime%
-
-cd grocy
-git pull
-cd ..
-timeout /t %waittime%
-
-cd paperless-ngx
-git pull
-cd ..
-timeout /t %waittime%
-
-cd manage-my-damn-life-nextjs
-git pull
-cd ..
-timeout /t %waittime%
-
-cd dockge
-git pull
-cd ..
-timeout /t %waittime%
+:: counter to tell how many pulls were done
+:: the pathcounter variable is used to cycle through only the amount of paths defined
+set "count=0"
+set "pathcount=35"
 
 
-cd synapse
-git pull
-cd ..
-timeout /t %waittime%
+:: working for loop
+FOR /L %%A in (1,1,%pathcount%) DO (
+    set /a index=%%A %% %pathcount%
+    if !count! == 0 set "currentPath=!path1!"
+    if !count! == 1 set "currentPath=!path2!"
+    if !count! == 2 set "currentPath=!path3!"
+    if !count! == 3 set "currentPath=!path4!"
+    if !count! == 4 set "currentPath=!path5!"
+    if !count! == 5 set "currentPath=!path6!"
+    if !count! == 6 set "currentPath=!path7!"
+    if !count! == 7 set "currentPath=!path8!"
+    if !count! == 8 set "currentPath=!path9!"
+    if !count! == 9 set "currentPath=!path10!"
+    if !count! == 10 set "currentPath=!path11!"
+    if !count! == 11 set "currentPath=!path12!"
+    if !count! == 12 set "currentPath=!path13!"
+    if !count! == 13 set "currentPath=!path14!"    
+    if !count! == 14 set "currentPath=!path15!"
+    if !count! == 15 set "currentPath=!path16!"
+    if !count! == 16 set "currentPath=!path17!"
+    if !count! == 17 set "currentPath=!path18!"
+    if !count! == 18 set "currentPath=!path19!"    
+    if !count! == 19 set "currentPath=!path20!"
+    if !count! == 20 set "currentPath=!path21!"
+    if !count! == 21 set "currentPath=!path22!"
+    if !count! == 22 set "currentPath=!path23!"
+    if !count! == 23 set "currentPath=!path24!"    
+    if !count! == 24 set "currentPath=!path25!"
+    if !count! == 25 set "currentPath=!path26!"
+    if !count! == 26 set "currentPath=!path27!"
+    if !count! == 27 set "currentPath=!path28!"
+    if !count! == 28 set "currentPath=!path29!"    
+    if !count! == 29 set "currentPath=!path30!"
+    if !count! == 30 set "currentPath=!path31!"
+    if !count! == 31 set "currentPath=!path32!"
+    if !count! == 32 set "currentPath=!path33!"
+    if !count! == 33 set "currentPath=!path34!"    
+    if !count! == 34 set "currentPath=!path35!"
+    
 
-cd element-x-ios
-git pull
-cd ..
-timeout /t %waittime%
+    echo Iteration %%A
+    echo Current path: !currentPath!
+    cd /d "!currentPath!"
+    git pull
+    
+    echo ----------------------------------
+    echo Pull completed for !currentPath!
+    echo ----------------------------------
 
-cd nginx-proxy-manager
-git pull
-cd ..
-timeout /t %waittime%
+    set /a count+=1
+    timeout /t %waittime% >nul
+)
 
-cd jellyseerr
-git pull
-cd ..
-timeout /t %waittime%
-
-cd filebrowser
-git pull
-cd ..
-timeout /t %waittime%
-
-cd paperless-ai
-git pull
-cd ..
-timeout /t %waittime%
-
-cd tududi
-git pull
-cd ..
-timeout /t %waittime%
-
-cd endurain
-git pull
-cd ..
-timeout /t %waittime%
-
-timeout /t -1
+echo Total pulls: %count%
+pause
