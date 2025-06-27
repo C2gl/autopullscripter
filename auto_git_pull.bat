@@ -2,7 +2,7 @@
 setlocal enabledelayedexpansion
 
 :: wait time between pulls in the loop
-set "waittime=10"
+set "waittime=3"
 
 :: defined paths to git repositories
 set "path1=C:\Users\lieve\Documents\GitHub\blink"
