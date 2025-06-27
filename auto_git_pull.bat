@@ -27,9 +27,9 @@ FOR /L %%A in (1,1,%pathcount%) DO (
     cd /d "!currentPath!"
     git pull
     
-    echo -----------------------------
+    echo ----------------------------------
     echo Pull completed for !currentPath!
-    echo -----------------------------
+    echo ----------------------------------
 
     set /a count+=1
     timeout /t %waittime% >nul
