@@ -1,4 +1,4 @@
-set waittime= 30 # the waitime between libraries pulls
+set "waittime=10" # the waitime between libraries pulls
 
 cd blink
 git pull
