@@ -22,7 +22,7 @@ set "path29=C:\Users\lieve\Documents\GitHub\JELLY\Swiftfin"
 set "path2=C:\Users\lieve\Documents\Github\HOME_ASSISTANT\core"
 set "path36=C:\Users\lieve\Documents\Github\HOME_ASSISTANT\frontend" 
 set "path37=C:\Users\lieve\Documents\Github\HOME_ASSISTANT\supervisor"
-set "path38=C:\Users\lieve\Documents\Github\HOME_ASSISTANT\operating system"
+set "path38=C:\Users\lieve\Documents\Github\HOME_ASSISTANT\operating-system"
 
     :: - personal repositories
 set "path39=C:\Users\lieve\Documents\Github\personal_repos\home_server"
