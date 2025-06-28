@@ -87,7 +87,7 @@ FOR /L %%A in (1,1,%pathcount%) DO (
     if !count! == 34 set "currentPath=!path35!"
     
 
-    echo Iteration %%A
+    echo Repositorie %%A
     echo Current path: !currentPath!
     cd /d "!currentPath!"
     git pull
