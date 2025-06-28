@@ -4,19 +4,19 @@ setlocal enabledelayedexpansion
 :: wait time between pulls in the loop
 set "waittime=3"
 
-:: defined paths to git repositories
+:: defined paths to git repositories (array like structure)
 set "repo[0]=C:\Users\lieve\Documents\GitHub\blink"
 set "repo[1]=C:\Users\lieve\Documents\GitHub\core"
 set "repo[3]=C:\Users\lieve\Documents\GitHub\csm"
 set "repo[4]=C:\Users\lieve\Documents\GitHub\dockge"
 set "repo[5]=C:\Users\lieve\Documents\GitHub\element-x-ios"
-set "path6=C:\Users\lieve\Documents\GitHub\endurain"
-set "path7=C:\Users\lieve\Documents\GitHub\ferrishare"
-set "path8=C:\Users\lieve\Documents\GitHub\filebrowser"
-set "path9=C:\Users\lieve\Documents\GitHub\firefly-iii"
-set "path10=C:\Users\lieve\Documents\GitHub\Fladder"
-set "path11=C:\Users\lieve\Documents\GitHub\grocy"
-set "path12=C:\Users\lieve\Documents\GitHub\immich"
+set "repo[6]=C:\Users\lieve\Documents\GitHub\endurain"
+set "repo[7]=C:\Users\lieve\Documents\GitHub\ferrishare"
+set "repo[8]=C:\Users\lieve\Documents\GitHub\filebrowser"
+set "repo[9]=C:\Users\lieve\Documents\GitHub\firefly-iii"
+set "repo[10]=C:\Users\lieve\Documents\GitHub\Fladder"
+set "repo[11]=C:\Users\lieve\Documents\GitHub\grocy"
+set "repo[12]=C:\Users\lieve\Documents\GitHub\immich"
 set "path13=C:\Users\lieve\Documents\GitHub\immich-go"
 set "path14=C:\Users\lieve\Documents\GitHub\jellyfin"
 set "path15=C:\Users\lieve\Documents\GitHub\jellyfin-media-player"
@@ -44,10 +44,10 @@ set "path35=C:\Users\lieve\Documents\GitHub\zigbee2mqtt"
 :: counter to tell how many pulls were done
 :: the pathcounter variable is used to cycle through only the amount of paths defined
 set "count=0"
-set "pathcount=5"
+set "pathcount=12"
 
 
-:: working for loop (should be turned into a function loop)
+:: working for loop
 FOR /L %%A in (1,1,%pathcount%) DO (
     set "currentPath=!repo[%%A]!"
        
