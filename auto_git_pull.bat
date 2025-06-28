@@ -24,6 +24,9 @@ set "path36=C:\Users\lieve\Documents\Github\HOME_ASSISTANT\frontend"
 set "path37=C:\Users\lieve\Documents\Github\HOME_ASSISTANT\supervisor"
 set "path38=C:\Users\lieve\Documents\Github\HOME_ASSISTANT\operating system"
 
+    :: - personal repositories
+set "path39=C:\Users\lieve\Documents\Github\personal_repos\home_server"
+
     :: - Other
 set "path1=C:\Users\lieve\Documents\GitHub\blink"
 set "path3=C:\Users\lieve\Documents\GitHub\csm"
@@ -97,6 +100,7 @@ FOR /L %%A in (1,1,%pathcount%) DO (
     if !count! == 35 set "currentPath=!path36!"
     if !count! == 36 set "currentPath=!path37!"
     if !count! == 37 set "currentPath=!path38!"
+    if !count! == 38 set "currentPath=!path39!"
 
     echo Iteration %%A
     echo Current path: !currentPath!
