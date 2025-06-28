@@ -26,6 +26,7 @@ set "path38=C:\Users\lieve\Documents\Github\HOME_ASSISTANT\operating system"
 
     :: - personal repositories
 set "path39=C:\Users\lieve\Documents\Github\personal_repos\home_server"
+set "path40=C:\Users\lieve\Documents\Github\personal_repos\autopullscripter"
 
     :: - Other
 set "path1=C:\Users\lieve\Documents\GitHub\blink"
@@ -56,7 +57,7 @@ set "path35=C:\Users\lieve\Documents\GitHub\zigbee2mqtt"
 :: counter to tell how many pulls were done
 :: the pathcounter variable is used to cycle through only the amount of paths defined
 set "count=0"
-set "pathcount=38"
+set "pathcount=40"
 
 
 :: working for loop
@@ -101,6 +102,7 @@ FOR /L %%A in (1,1,%pathcount%) DO (
     if !count! == 36 set "currentPath=!path37!"
     if !count! == 37 set "currentPath=!path38!"
     if !count! == 38 set "currentPath=!path39!"
+    if !count! == 39 set "currentPath=!path40!"
 
     echo Iteration %%A
     echo Current path: !currentPath!
