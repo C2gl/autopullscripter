@@ -21,6 +21,8 @@ set "path29=C:\Users\lieve\Documents\GitHub\Swiftfin"
     :: - home assistant
 set "path2=C:\Users\lieve\Documents\Github\HOME_ASSISTANT\core"
 set "path36=C:\Users\lieve\Documents\Github\HOME_ASSISTANT\frontend" 
+set "path37=C:\Users\lieve\Documents\Github\HOME_ASSISTANT\supervisor"
+set "path38=C:\Users\lieve\Documents\Github\HOME_ASSISTANT\operating system"
 
     :: - Other
 set "path1=C:\Users\lieve\Documents\GitHub\blink"
@@ -51,7 +53,7 @@ set "path35=C:\Users\lieve\Documents\GitHub\zigbee2mqtt"
 :: counter to tell how many pulls were done
 :: the pathcounter variable is used to cycle through only the amount of paths defined
 set "count=0"
-set "pathcount=35"
+set "pathcount=38"
 
 
 :: working for loop
@@ -92,7 +94,9 @@ FOR /L %%A in (1,1,%pathcount%) DO (
     if !count! == 32 set "currentPath=!path33!"
     if !count! == 33 set "currentPath=!path34!"    
     if !count! == 34 set "currentPath=!path35!"
-    
+    if !count! == 35 set "currentPath=!path36!"
+    if !count! == 36 set "currentPath=!path37!"
+    if !count! == 37 set "currentPath=!path38!"
 
     echo Iteration %%A
     echo Current path: !currentPath!
