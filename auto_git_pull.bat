@@ -5,8 +5,31 @@ setlocal enabledelayedexpansion
 set "waittime=3"
 
 :: defined paths to git repositories
+::CATEGORIES 
+    :: - Jellyfin
+set "path10=C:\Users\lieve\Documents\GitHub\JELLY\Fladder"
+set "path14=C:\Users\lieve\Documents\GitHub\JELLY\jellyfin"
+set "path15=C:\Users\lieve\Documents\GitHub\JELLY\jellyfin-media-player"
+set "path16=C:\Users\lieve\Documents\GitHub\JELLY\jellyfin-plugin-streamyfin"
+set "path17=C:\Users\lieve\Documents\GitHub\JELLY\jellyfin-web"
+set "path18=C:\Users\lieve\Documents\GitHub\JELLY\jellyfin-webos"
+set "path19=C:\Users\lieve\Documents\GitHub\JELLY\jellyseerr"
+set "path20=C:\Users\lieve\Documents\GitHub\JELLY\jellystat"
+set "path28=C:\Users\lieve\Documents\GitHub\JELLY\streamyfin"
+set "path29=C:\Users\lieve\Documents\GitHub\JELLY\Swiftfin"
+
+    :: - home assistant
+set "path2=C:\Users\lieve\Documents\Github\HOME_ASSISTANT\core"
+set "path36=C:\Users\lieve\Documents\Github\HOME_ASSISTANT\frontend" 
+set "path37=C:\Users\lieve\Documents\Github\HOME_ASSISTANT\supervisor"
+set "path38=C:\Users\lieve\Documents\Github\HOME_ASSISTANT\operating-system"
+
+    :: - personal repositories
+set "path39=C:\Users\lieve\Documents\Github\personal_repos\home_server"
+set "path40=C:\Users\lieve\Documents\Github\personal_repos\autopullscripter"
+
+    :: - Other
 set "path1=C:\Users\lieve\Documents\GitHub\blink"
-set "path2=C:\Users\lieve\Documents\GitHub\core"
 set "path3=C:\Users\lieve\Documents\GitHub\csm"
 set "path4=C:\Users\lieve\Documents\GitHub\dockge"
 set "path5=C:\Users\lieve\Documents\GitHub\element-x-ios"
@@ -14,17 +37,9 @@ set "path6=C:\Users\lieve\Documents\GitHub\endurain"
 set "path7=C:\Users\lieve\Documents\GitHub\ferrishare"
 set "path8=C:\Users\lieve\Documents\GitHub\filebrowser"
 set "path9=C:\Users\lieve\Documents\GitHub\firefly-iii"
-set "path10=C:\Users\lieve\Documents\GitHub\Fladder"
 set "path11=C:\Users\lieve\Documents\GitHub\grocy"
 set "path12=C:\Users\lieve\Documents\GitHub\immich"
 set "path13=C:\Users\lieve\Documents\GitHub\immich-go"
-set "path14=C:\Users\lieve\Documents\GitHub\jellyfin"
-set "path15=C:\Users\lieve\Documents\GitHub\jellyfin-media-player"
-set "path16=C:\Users\lieve\Documents\GitHub\jellyfin-plugin-streamyfin"
-set "path17=C:\Users\lieve\Documents\GitHub\jellyfin-web"
-set "path18=C:\Users\lieve\Documents\GitHub\jellyfin-webos"
-set "path19=C:\Users\lieve\Documents\GitHub\jellyseerr"
-set "path20=C:\Users\lieve\Documents\GitHub\jellystat"
 set "path21=C:\Users\lieve\Documents\GitHub\ladybird"
 set "path22=C:\Users\lieve\Documents\GitHub\manage-my-damn-life-nextjs"
 set "path23=C:\Users\lieve\Documents\GitHub\nginx-proxy-manager"
@@ -32,8 +47,6 @@ set "path24=C:\Users\lieve\Documents\GitHub\paperless-ai"
 set "path25=C:\Users\lieve\Documents\GitHub\paperless-ngx"
 set "path26=C:\Users\lieve\Documents\GitHub\ProxmoxVE"
 set "path27=C:\Users\lieve\Documents\GitHub\spksrc"
-set "path28=C:\Users\lieve\Documents\GitHub\streamyfin"
-set "path29=C:\Users\lieve\Documents\GitHub\Swiftfin"
 set "path30=C:\Users\lieve\Documents\GitHub\synapse"
 set "path31=C:\Users\lieve\Documents\GitHub\syncthing"
 set "path32=C:\Users\lieve\Documents\GitHub\tailscale"
@@ -44,7 +57,7 @@ set "path35=C:\Users\lieve\Documents\GitHub\zigbee2mqtt"
 :: counter to tell how many pulls were done
 :: the pathcounter variable is used to cycle through only the amount of paths defined
 set "count=0"
-set "pathcount=35"
+set "pathcount=40"
 
 
 :: working for loop
@@ -85,7 +98,11 @@ FOR /L %%A in (1,1,%pathcount%) DO (
     if !count! == 32 set "currentPath=!path33!"
     if !count! == 33 set "currentPath=!path34!"    
     if !count! == 34 set "currentPath=!path35!"
-    
+    if !count! == 35 set "currentPath=!path36!"
+    if !count! == 36 set "currentPath=!path37!"
+    if !count! == 37 set "currentPath=!path38!"
+    if !count! == 38 set "currentPath=!path39!"
+    if !count! == 39 set "currentPath=!path40!"
 
     echo Repositorie %%A
     echo Current path: !currentPath!
