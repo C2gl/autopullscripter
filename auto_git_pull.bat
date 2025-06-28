@@ -7,16 +7,16 @@ set "waittime=3"
 :: defined paths to git repositories
 ::CATEGORIES 
     :: - Jellyfin (SET THEM IN A DIFFERENT SUBPATH)
-set "path10=C:\Users\lieve\Documents\GitHub\Fladder"
-set "path14=C:\Users\lieve\Documents\GitHub\jellyfin"
-set "path15=C:\Users\lieve\Documents\GitHub\jellyfin-media-player"
-set "path16=C:\Users\lieve\Documents\GitHub\jellyfin-plugin-streamyfin"
-set "path17=C:\Users\lieve\Documents\GitHub\jellyfin-web"
-set "path18=C:\Users\lieve\Documents\GitHub\jellyfin-webos"
-set "path19=C:\Users\lieve\Documents\GitHub\jellyseerr"
-set "path20=C:\Users\lieve\Documents\GitHub\jellystat"
-set "path28=C:\Users\lieve\Documents\GitHub\streamyfin"
-set "path29=C:\Users\lieve\Documents\GitHub\Swiftfin"
+set "path10=C:\Users\lieve\Documents\GitHub\JELLY\Fladder"
+set "path14=C:\Users\lieve\Documents\GitHub\JELLY\jellyfin"
+set "path15=C:\Users\lieve\Documents\GitHub\JELLY\jellyfin-media-player"
+set "path16=C:\Users\lieve\Documents\GitHub\JELLY\jellyfin-plugin-streamyfin"
+set "path17=C:\Users\lieve\Documents\GitHub\JELLY\jellyfin-web"
+set "path18=C:\Users\lieve\Documents\GitHub\JELLY\jellyfin-webos"
+set "path19=C:\Users\lieve\Documents\GitHub\JELLY\jellyseerr"
+set "path20=C:\Users\lieve\Documents\GitHub\JELLY\jellystat"
+set "path28=C:\Users\lieve\Documents\GitHub\JELLY\streamyfin"
+set "path29=C:\Users\lieve\Documents\GitHub\JELLY\Swiftfin"
 
     :: - home assistant
 set "path2=C:\Users\lieve\Documents\Github\HOME_ASSISTANT\core"
