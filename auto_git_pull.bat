@@ -6,7 +6,7 @@ set "waittime=3"
 
 :: defined paths to git repositories
 ::CATEGORIES 
-    :: - Jellyfin
+    :: - Jellyfin (SET THEM IN A DIFFERENT SUBPATH)
 set "path10=C:\Users\lieve\Documents\GitHub\Fladder"
 set "path14=C:\Users\lieve\Documents\GitHub\jellyfin"
 set "path15=C:\Users\lieve\Documents\GitHub\jellyfin-media-player"
