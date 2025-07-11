@@ -44,7 +44,7 @@ set "path35=C:\Users\lieve\Documents\GitHub\zigbee2mqtt"
 :: counter to tell how many pulls were done
 :: the pathcounter variable is used to cycle through only the amount of paths defined
 set "count=0"
-set "pathcount=12"
+set "pathcount=35"
 
 
 :: working for loop
