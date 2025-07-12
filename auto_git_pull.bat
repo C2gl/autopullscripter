@@ -53,11 +53,12 @@ set "repo[38]=C:\Users\lieve\Documents\GitHub\tailscale"
 set "repo[39]=C:\Users\lieve\Documents\GitHub\tududi"
 set "repo[40]=C:\Users\lieve\Documents\GitHub\tuwunel"
 set "repo[41]=C:\Users\lieve\Documents\GitHub\zigbee2mqtt"
+set "repo[42]=C:\Users\lieve\Documents\GitHub\vaultwarden"
 
 :: counter to tell how many pulls were done
 :: the pathcounter variable is used to cycle through only the amount of paths defined
 set "count=0"
-set "pathcount=41"
+set "pathcount=42"
 
 
 :: working for loop
