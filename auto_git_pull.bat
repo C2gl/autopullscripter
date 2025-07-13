@@ -11,6 +11,8 @@ for /f "usebackq delims=" %%R in ("%repo_file%") do (
     set "currentPath=%%R"
     echo Current path: !currentPath!
     cd /d "!currentPath!"
+    
+    echo Pulling changes...
     git pull
 
     echo ----------------------------------
