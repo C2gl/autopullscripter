@@ -2,12 +2,12 @@
 setlocal enabledelayedexpansion
 
 :: variables 
-set "waittime=3"        :: seconds to wait between pulls
-set "repo_file=repos.txt" :: file containing paths to git repositories
-set "count=0" :: counter for number of pulls
+set "waittime=3"
+set "repo_file=repos.txt"
+set "count=0"
 
 for /f "usebackq delims=" %%R in ("%repo_file%") do (
-    echo itteration %count%
+    echo itteration !count!
     set "currentPath=%%R"
     echo Current path: !currentPath!
     cd /d "!currentPath!"
