@@ -25,7 +25,7 @@ i would be asking to explain why and how since this is mostly a learning project
 
 # important! 
 this repo is both on github and gitlab, 
-whilst bug reports on gitlab will be looked atn the main used place will be github. and thus that one will be more actively used, especially for code and pull requests
+whilst bug reports on gitlab will be looked at, the main used place will be github. and thus that one will be more actively used, especially for code and pull requests
 
 **github: https://github.com/C2gl/autopullscripter**
 **gitlab: https://gitlab.com/C2gl/autopullscripter**
