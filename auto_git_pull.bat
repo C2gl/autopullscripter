@@ -22,7 +22,7 @@ set "repo[9]=C:\Users\lieve\Documents\GitHub\JELLY\Swiftfin"
 set "repo[10]=C:\Users\lieve\Documents\Github\HOME_ASSISTANT\core"
 set "repo[11]=C:\Users\lieve\Documents\Github\HOME_ASSISTANT\frontend" 
 set "repo[12]=C:\Users\lieve\Documents\Github\HOME_ASSISTANT\supervisor"
-set "repo[13]=C:\Users\lieve\Documents\Github\HOME_ASSISTANT\operating-systemm"
+set "repo[13]=C:\Users\lieve\Documents\Github\HOME_ASSISTANT\operating-system"
 
     :: - personal repositories
 set "repo[14]=C:\Users\lieve\Documents\Github\personal_repos\home_server"
