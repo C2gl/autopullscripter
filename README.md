@@ -1,9 +1,13 @@
 a simple .bat script to automatically pull all actively folowed git repos
 
 # how to use 
-to use this, you can eddit in the [auto_git_pull.bat](https://github.com/C2gl/autopullscripter/blob/main/auto_git_pull.bat) the paths to github repositoried you wish to track
+to use this script you can just simply download the [release](https://github.com/C2gl/autopullscripter/releases) script from github. 
+you place said script in a folder. and **in that same folder** you are to manually add a .txt file called repos.txt
 
-you can see a few existing demo repos to see how this is to be done, a current update is on the way where they way this has to be done should be changed
+in that repos.txt file you can add the paths to the repositories you wish to track, 
+
+these should be added as plain text, and each on a different line, no added text. 
+you can check the [example file](https://github.com/C2gl/autopullscripter/blob/main/repos.txt) in the github repository
 
 
 # future features 
