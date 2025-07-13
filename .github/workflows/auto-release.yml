@@ -1,0 +1,47 @@
+name: Auto Release on Milestone Completion
+
+on:
+  issues:
+    types: [closed]
+  pull_request:
+    types: [closed]
+
+jobs:
+  draft-release:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Check for completed milestone
+        id: milestone
+        run: |
+          # This script checks if all issues in a milestone are closed
+          # Requires GitHub CLI (gh) and jq
+          gh auth login --with-token < ${{ secrets.GITHUB_TOKEN }}
+          milestone_title="Your Milestone Title" # change as needed
+          milestone_id=$(gh api repos/${{ github.repository }}/milestones | jq ".[] | select(.title==\"$milestone_title\") | .number")
+          open_issues=$(gh api repos/${{ github.repository }}/milestones/$milestone_id | jq .open_issues)
+          if [ "$open_issues" -eq "0" ]; then
+            echo "milestone_complete=true" >> $GITHUB_OUTPUT
+          else
+            echo "milestone_complete=false" >> $GITHUB_OUTPUT
+          fi
+
+      - name: Create Release
+        if: steps.milestone.outputs.milestone_complete == 'true'
+        uses: softprops/action-gh-release@v2
+        with:
+          tag_name: v${{ github.run_id }}
+          name: Release for Milestone
+          draft: true
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Upload .bat file
+        if: steps.milestone.outputs.milestone_complete == 'true'
+        uses: softprops/action-gh-release@v2
+        with:
+          files: path/to/yourfile.bat
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
