@@ -76,7 +76,14 @@ FOR /L %%A in (1,1,%pathcount%) DO (
     echo Iteration %%A
     echo Current path: !currentPath!
     cd /d "!currentPath!"
-    git fetch origin
+    
+    if /i "!ToFetch!"=="y" (
+        echo Fetching latest changes...
+        git fetch origin
+    ) else (
+        echo Skipping fetch.
+    )
+    echo Pulling changes...
     git pull
     
     echo ----------------------------------
