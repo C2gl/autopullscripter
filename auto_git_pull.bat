@@ -68,6 +68,7 @@ FOR /L %%A in (1,1,%pathcount%) DO (
     echo Iteration %%A
     echo Current path: !currentPath!
     cd /d "!currentPath!"
+    git fetch origin
     git pull
     
     echo ----------------------------------
