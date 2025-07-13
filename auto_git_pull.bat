@@ -1,6 +1,11 @@
 @echo off
 setlocal enabledelayedexpansion
 
+:: user input configuration
+echo you will now get asked a few configurations before the script runs
+
+set /p ToFetch="Do you want to fetch the latest changes before pulling? (y/n): "
+
 :: wait time between pulls in the loop
 set "waittime=3"
 
