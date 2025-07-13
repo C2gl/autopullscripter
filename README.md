@@ -22,3 +22,10 @@ in the (far) future, quite a few features are planned, not to be a usefull repos
 # report issues 
 if you see issues, or want to help developing this, feel free to.
 i would be asking to explain why and how since this is mostly a learning project. so i am not looking for stuff to be done in place of me 
+
+# important! 
+this repo is both on github and gitlab, 
+whilst bug reports on gitlab will be looked atn the main used place will be github. and thus that one will be more actively used, especially for code and pull requests
+
+**github: https://github.com/C2gl/autopullscripter**
+**gitlab: https://gitlab.com/C2gl/autopullscripter**
