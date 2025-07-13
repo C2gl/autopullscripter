@@ -7,6 +7,7 @@ set "repo_file=repos.txt" :: file containing paths to git repositories
 set "count=0" :: counter for number of pulls
 
 for /f "usebackq delims=" %%R in ("%repo_file%") do (
+    echo itteration %count%
     set "currentPath=%%R"
     echo Current path: !currentPath!
     cd /d "!currentPath!"
