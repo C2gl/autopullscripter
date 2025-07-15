@@ -8,7 +8,7 @@ set "count=0"
 
 :: user set variables 
 set /p "waittime=Enter wait time between pulls (default is 3 seconds): "
-set /p "toFetch=Do you want to fetch latest changes before pulling? (y/n, default is yes): "
+set /p "toFetch=Do you want to fetch latest changes before pulling? (y/n): "
 
 for /f "usebackq delims=" %%R in ("%repo_file%") do (
     echo itteration !count!
