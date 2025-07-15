@@ -1,0 +1,31 @@
+name: Build Batch EXE with bat2exe
+
+on:
+  push:
+    branches:
+      - fetcher-call
+  pull_request:
+    branches:
+      - fetcher-call
+
+jobs:
+  build:
+    runs-on: windows-latest
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Download bat2exe
+        run: |
+          Invoke-WebRequest -Uri https://github.com/vecherbatov/bat2exe/releases/latest/download/bat2exe.exe -OutFile bat2exe.exe
+
+      - name: Convert run.bat to run.exe
+        run: |
+          .\bat2exe.exe /bat run.bat /exe run.exe
+
+      - name: Upload run.exe as artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: run-exe
+          path: run.exe
