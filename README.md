@@ -2,12 +2,23 @@ A simple .bat script to automatically pull all actively folowed git repos.
 
 # How to use?
 To use this script you can just simply download the [release](https://github.com/C2gl/autopullscripter/releases) script from github. 
-You place said script in a folder. And **in that same folder** you are to manually add a .txt file called repos.txt.
+You place said script exe in a folder. And **in that same folder** you are to manually add a .txt file called repos.txt.
 
 In that 'repos.txt' file you can add the paths to the repositories you wish to track, 
 
 these should be added as plain text, and each on a different line, no added text. 
 You can check the [example file](https://github.com/C2gl/autopullscripter/blob/main/repos.txt) in the github repository.
+
+## configurations
+### default configuration
+at first run, the script will prompt you to know if you want it to run by default, these are the following default configurations:
+- waitime between pulls: 3 sec
+- go through entire repos.txt file
+- just pull the working branch of the repo
+
+### custom configurations
+if at the first run, you tell it you do not wish to run the default script, it will walk you though some questions. 
+these questions are self explainatory and clear, but if needed, the different configurations will be explained here.
 
 
 # future features 
