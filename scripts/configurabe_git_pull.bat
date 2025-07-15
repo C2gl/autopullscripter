@@ -9,6 +9,11 @@ set "count=0"
 :: user set variables 
 set /p "waittime=Enter wait time between pulls (default is 3 seconds): "
 set /p "toFetch=Do you want to fetch latest changes before pulling? (y/n): "
+set /p "docustomcommand=do you want to run a custom command before pulling? (y/n): "
+
+if /i "!docustomcommand!"=="y" (
+    set /p "customcommand=Enter the custom command to run: "
+)
 
 for /f "usebackq delims=" %%R in ("%repo_file%") do (
     echo itteration !count!
@@ -19,6 +24,11 @@ for /f "usebackq delims=" %%R in ("%repo_file%") do (
     if /i "!toFetch!"=="y" (
         call "%~dp0fetch.bat"
     ) 
+
+    if /i "!docustomcommand!"=="y" (
+        echo Running custom command: !customcommand!
+        !customcommand!
+    )
 
     echo Pulling changes...
     git pull
