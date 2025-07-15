@@ -23,6 +23,7 @@ for /f "usebackq delims=" %%R in ("%repo_file%") do (
     echo ----------------------------------
 
     set /a count+=1
+    echo Waiting for %waittime% seconds before next pull...
     timeout /t %waittime% >nul
 )
 
