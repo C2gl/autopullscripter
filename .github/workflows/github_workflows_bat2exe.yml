@@ -1,4 +1,4 @@
-name: Build Batch EXE with bat2exe
+name: Build Batch EXE
 
 on:
   push:
@@ -16,13 +16,17 @@ jobs:
       - name: Checkout repository
         uses: actions/checkout@v4
 
-      - name: Download bat2exe
+      - name: Download Bat To Exe Converter
         run: |
-          Invoke-WebRequest -Uri https://github.com/vecherbatov/bat2exe/releases/latest/download/bat2exe.exe -OutFile bat2exe.exe
+          Invoke-WebRequest -Uri https://f2ko.de/downloads/Bat_To_Exe_Converter.zip -OutFile converter.zip
+          Expand-Archive -Path converter.zip -DestinationPath converter
+          Get-ChildItem -Recurse converter
+        shell: pwsh
 
       - name: Convert run.bat to run.exe
         run: |
-          .\bat2exe.exe /bat run.bat /exe run.exe
+          .\converter\Bat_To_Exe_Converter\Bat_To_Exe_Converter.exe /bat run.bat /exe run.exe /silent
+        shell: cmd
 
       - name: Upload run.exe as artifact
         uses: actions/upload-artifact@v4
