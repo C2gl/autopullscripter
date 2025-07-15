@@ -15,6 +15,8 @@ if /i "!docustomcommand!"=="y" (
     set /p "customcommand=Enter the custom command to run: "
 )
 
+
+:: loop through each repository path in the file
 for /f "usebackq delims=" %%R in ("%repo_file%") do (
     echo itteration !count!
     set "currentPath=%%R"
