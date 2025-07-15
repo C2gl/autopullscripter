@@ -29,3 +29,7 @@ whilst bug reports on gitlab will be looked at, the main used place will be gith
 
 **github: https://github.com/C2gl/autopullscripter**
 **gitlab: https://gitlab.com/C2gl/autopullscripter**
+
+
+# dependancies 
+- [Bat-to-Exe-Converter](https://github.com/l-urk/Bat-To-Exe-Converter-64-Bit/releases) - used to make releases
