@@ -33,7 +33,7 @@ echo Creating directory: !path!\!repo_name!
 mkdir "!repo_name!"
 echo Directory created: !path!\!repo_name!
 pause
-cd /d "!path!\!repo_name!" 
+cd /d "!path!
 echo initializing git repository...
 
 REM Add Git to PATH for this script session
