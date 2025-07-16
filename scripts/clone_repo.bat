@@ -9,8 +9,8 @@ set /p "path=Enter the local path where you want to clone the repository: "
 set /p "toadd=Do you want to add the new repository path to repos.txt? (y/n): "
 
 :: cloning the new repository
-cd /d "%path%"
-git clone "%repo_url%"
+cd /d "!path!"
+git clone "!repo_url!"
 
 :: check if the user wants to add the new repository path to repos.txt
 if /i "!toadd!"=="y" (
