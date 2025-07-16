@@ -24,9 +24,6 @@ if /i "!toadd!"=="y" (
 for %%A in ("%repo_url%") do (
     set "repo_name=%%~nA"
 )
-if /i "!repo_url:~-4!"==".git" (
-    set "repo_name=!repo_name:~0,-4!"
-)
 
 :: add the full path to repos.txt
 echo !path!\!repo_name! >> "%~dp0..\repos.txt"
