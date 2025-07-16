@@ -29,4 +29,4 @@ if /i "!repo_url:~-4!"==".git" (
 )
 
 :: add the full path to repos.txt
-echo %path%\!repo_name!>>"..\..\repos.txt"
+echo %path%\!repo_name! > "..\..\repos.txt"
