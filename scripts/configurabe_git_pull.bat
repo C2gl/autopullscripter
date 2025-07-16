@@ -2,15 +2,17 @@
 setlocal enabledelayedexpansion
 
 :: variables 
-set "waittime=3"
 set "repo_file=repos.txt"
 set "count=0"
 
 :: Load config if exists
 if exist "config.txt" (
+    echo Loading configuration from config.txt...
     for /f "usebackq tokens=1,* delims==" %%A in ("config.txt") do (
         set "%%A=%%B"
     )
+) else (
+    echo No config file found, prompting for user input.
 )
 
 :: user set variables 
