@@ -1,6 +1,6 @@
 setlocal enabledelayedexpansion
 
-:: script that check for existing configuration files or repos.txt file
+:: script that check for existing repos.txt file
 
 if EXIST "%~dp0..\repos.txt" (
     echo repos.txt found.
