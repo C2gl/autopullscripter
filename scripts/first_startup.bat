@@ -1,3 +1,7 @@
+:: first_startup.bat
+:: this fie is called by run.bat and will go back to it when done running 
+@echo off
+
 setlocal enabledelayedexpansion
 
 :: script that check for existing repos.txt file
