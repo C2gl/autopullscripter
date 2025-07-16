@@ -25,4 +25,9 @@ if EXIST "%~dp0..\repos.txt" (
     )
 )
 
+set /p "clonenew=Do you want to clone new repositories? (y/n): "
+
+if /i "!clonenew!"=="y" (
+    call "%~dp0clone_repo.bat"
+)
 pause
