@@ -8,9 +8,6 @@ set /p "repo_url=Enter repository URL: "
 set /p "path=Enter the local path where you want to clone the repository: "
 set /p "toadd=Do you want to add the new repository path to repos.txt? (y/n): "
 
-:: cloning the new repository
-cd /d "!path!"
-git clone "!repo_url!"
 
 :: check if the user wants to add the new repository path to repos.txt
 if /i "!toadd!"=="y" (
@@ -27,3 +24,13 @@ for %%A in ("%repo_url%") do (
 
 :: add the full path to repos.txt
 echo !path!\!repo_name! >> "%~dp0..\repos.txt"
+
+:: cloning the new repository
+if not exist "!path!" (
+    cd /d "!path!"
+    echo Directory does not exist. Creating directory...
+    mkdir "!path!"
+)
+cd /d "!path!"
+
+git clone "!repo_url!"
