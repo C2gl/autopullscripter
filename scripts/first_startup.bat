@@ -15,7 +15,7 @@ if EXIST "%~dp0..\repos.txt" (
     set /p "create=Do you want to create a new repos.txt file? (y/n): "
     if /i "!create!"=="y" (
         echo Creating repos.txt file...
-        echo > "%~dp0..\repos.txt"
+        echo "%~dp0..\repos.txt"
         echo repos.txt file created in parent directory.
         echo Please edit the repos.txt file to add your repository URLs.
         echo Run the script again after editing the repos.txt file.
