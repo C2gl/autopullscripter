@@ -26,11 +26,14 @@ for %%A in ("%repo_url%") do (
 echo !path!\!repo_name! >> "%~dp0..\repos.txt"
 
 :: cloning the new repository
-if not exist "!path!" (
-    cd /d "!path!"
-    echo Directory does not exist. Creating directory...
-    mkdir "!repo_name!"
-)
+cd /d "!path!"
+echo Directory does not exist. Creating directory...
+pause
+echo Creating directory: !path!\!repo_name!
+mkdir "!repo_name!"
+echo Directory created: !path!\!repo_name!
+
+
 cd /d "!path!"
 
 git clone "!repo_url!"
