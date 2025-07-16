@@ -4,6 +4,8 @@ setlocal enabledelayedexpansion
 echo  starting program
 echo ----------------------------------
 
+call scripts/first_startup.bat
+
 set /p "auto=Do you want to run default configurations? (y/n): "
 
 if /i "%auto%"=="y" (
