@@ -28,17 +28,14 @@ echo !path!\!repo_name! >> "%~dp0..\repos.txt"
 :: cloning the new repository
 cd /d "!path!"
 echo Directory does not exist. Creating directory...
-pause
 echo Creating directory: !path!\!repo_name!
 mkdir "!repo_name!"
 echo Directory created: !path!\!repo_name!
-pause
 cd /d "!path!
 echo initializing git repository...
 
 REM Add Git to PATH for this script session
 set "PATH=%PATH%;C:\Program Files\Git\bin"
-pause
 echo Cloning repository: !repo_url! to !path!\!repo_name!
 
 git clone "!repo_url!"
