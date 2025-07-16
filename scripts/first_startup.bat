@@ -29,6 +29,7 @@ if EXIST "%~dp0..\repos.txt" (
     )
 )
 
+:: prompting user if they want to clone new repositories
 set /p "clonenew=Do you want to clone new repositories? (y/n): "
 
 if /i "!clonenew!"=="y" (
