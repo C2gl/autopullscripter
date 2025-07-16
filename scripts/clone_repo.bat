@@ -6,12 +6,20 @@ setlocal enabledelayedexpansion
 echo what is the URL of the repository you want to add?
 set /p "repo_url=Enter repository URL: "
 set /p "path=Enter the local path where you want to clone the repository: "
+set /p "toadd=Do you want to add the new repository path to repos.txt? (y/n): "
 
 :: cloning the new repository
 cd /d "%path%"
 git clone "%repo_url%"
 
+:: check if the user wants to add the new repository path to repos.txt
+if /i "!toadd!"=="y" (
+    echo Adding new repository path to repos.txt...
 
+) else (
+    echo Skipping addition of new repository path to repos.txt.
+    exit /b
+)
 :: extract repo name from URL (remove .git if present)
 for %%A in ("%repo_url%") do (
     set "repo_name=%%~nA"
