@@ -14,7 +14,7 @@ if EXIST "%~dp0..\repos.txt" (
         echo # Add your repository URLs here, one per line > "%~dp0..\repos.txt"
         echo repos.txt file created in parent directory.
         echo Please edit the repos.txt file to add your repository URLs.
-        echo run the script again after editing the repos.txt file.
+        echo Run the script again after editing the repos.txt file.
         pause
         exit
     ) else (
