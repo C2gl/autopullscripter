@@ -32,6 +32,8 @@ pause
 echo Creating directory: !path!\!repo_name!
 mkdir "!repo_name!"
 echo Directory created: !path!\!repo_name!
+pause
+git init
 
 
 cd /d "!path!"
