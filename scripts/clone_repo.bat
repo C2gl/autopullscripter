@@ -29,7 +29,7 @@ echo !path!\!repo_name! >> "%~dp0..\repos.txt"
 if not exist "!path!" (
     cd /d "!path!"
     echo Directory does not exist. Creating directory...
-    mkdir "!path!"
+    mkdir "!repo_name!"
 )
 cd /d "!path!"
 
