@@ -19,7 +19,7 @@ if EXIST "%~dp0..\repos.txt" (
         echo repos.txt file created in parent directory.
         set /p "addrepos=Do you want to add repository paths to repos.txt now? (y/n): "
         if /i "!addrepos!"=="y" (
-            call "%~dp0clone_repo.bat"
+            start "%~dp0clone_repo.bat"
         )
         echo Please edit the repos.txt file to add your repository URLs.
         echo Run the script again after editing the repos.txt file.
