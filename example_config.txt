@@ -1,0 +1,4 @@
+waittime=3
+toFetch=y
+docustomcommand=y
+customcommand=git checkout main
