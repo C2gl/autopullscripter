@@ -33,9 +33,15 @@ echo Creating directory: !path!\!repo_name!
 mkdir "!repo_name!"
 echo Directory created: !path!\!repo_name!
 pause
+cd /d "!path!\!repo_name!" 
+echo initializing git repository...
 git init
-
-
-cd /d "!path!"
+pause
+echo Cloning repository: !repo_url! to !path!\!repo_name!
 
 git clone "!repo_url!"
+
+echo Repository cloned successfully to !path!\!repo_name!
+echo New repository path added to repos.txt: !path!\!repo_name!
+pause
+
