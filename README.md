@@ -23,10 +23,11 @@ at first run, the script will prompt you to know if you want it to run by defaul
 if at the first run, you tell it you do not wish to run the default script, it will walk you though some questions. 
 these questions are self explainatory and clear, but if needed, the different configurations will be explained here.
 
-- what waitime it should set between pulls (should be a number in secconds)
-- weather or not you want to fetch changes before pulling (y/n)
-- to do a custom command before every pull, by example. You want for all your repos to go onto main, its in this step that you could type 'git checkout main'
-
+| Configuration                        | Description                                                                                  | Example                  |
+|---------------------------------------|----------------------------------------------------------------------------------------------|--------------------------|
+| Wait time between pulls               | Set the number of seconds to wait between pulls                                              | `3`                      |
+| Fetch changes before pulling          | Whether to fetch changes before pulling (`y`/`n`)                                            | `y`                      |
+| Custom command before every pull      | Run a custom command before each pull (e.g., switch branch)                                  | `git checkout main`      |
 # future features 
 In the (far) future, quite a few features are planned, not to be a usefull repository, but as a fun project to get my hands on some basic coding.
 
