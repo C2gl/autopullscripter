@@ -38,8 +38,6 @@ echo initializing git repository...
 
 REM Add Git to PATH for this script session
 set "PATH=%PATH%;C:\Program Files\Git\bin"
-
-git init
 pause
 echo Cloning repository: !repo_url! to !path!\!repo_name!
 
