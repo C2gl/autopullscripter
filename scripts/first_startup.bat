@@ -11,7 +11,7 @@ if EXIST "%~dp0..\repos.txt" (
 ) ELSE (
     echo repos.txt NOT found.
     timeout /t 5
-    echo would you like for the script to create a new repos.txt file?
+    echo Would you like for the script to create a new repos.txt file?
     set /p "create=Do you want to create a new repos.txt file? (y/n): "
     if /i "!create!"=="y" (
         echo Creating repos.txt file...
