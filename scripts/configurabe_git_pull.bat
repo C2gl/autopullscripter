@@ -9,7 +9,7 @@ set "count=0"
 :: user set variables 
 set /p "waittime=Enter wait time between pulls (default is 3 seconds): "
 set /p "toFetch=Do you want to fetch latest changes before pulling? (y/n): "
-set /p "docustomcommand=do you want to run a custom command before pulling? (y/n): "
+set /p "docustomcommand=Do you want to run a custom command before pulling? (y/n): "
 
 if /i "!docustomcommand!"=="y" (
     set /p "customcommand=Enter the custom command to run: "
@@ -18,7 +18,7 @@ if /i "!docustomcommand!"=="y" (
 
 :: loop through each repository path in the file
 for /f "usebackq delims=" %%R in ("%repo_file%") do (
-    echo itteration !count!
+    echo ITTERATION !count!
     set "currentPath=%%R"
     echo Current path: !currentPath!
     cd /d "!currentPath!"

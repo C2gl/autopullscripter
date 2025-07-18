@@ -32,7 +32,7 @@ echo Creating directory: !path!\!repo_name!
 mkdir "!repo_name!"
 echo Directory created: !path!\!repo_name!
 cd /d "!path!
-echo initializing git repository...
+echo Initializing git repository...
 
 REM Add Git to PATH for this script session
 set "PATH=%PATH%;C:\Program Files\Git\bin"
@@ -43,4 +43,3 @@ git clone "!repo_url!"
 echo Repository cloned successfully to !path!\!repo_name!
 echo New repository path added to repos.txt: !path!\!repo_name!
 pause
-

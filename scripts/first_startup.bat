@@ -11,7 +11,7 @@ if EXIST "%~dp0..\repos.txt" (
 ) ELSE (
     echo repos.txt NOT found.
     timeout /t 5
-    echo would you like for the script to create a new repos.txt file?
+    echo Would you like for the script to create a new repos.txt file?
     set /p "create=Do you want to create a new repos.txt file? (y/n): "
     if /i "!create!"=="y" (
         echo Creating repos.txt file...
@@ -29,7 +29,7 @@ if EXIST "%~dp0..\repos.txt" (
         exit
     ) else (
         echo Skipping creation of repos.txt file.
-        echo WITHOUT repos.txt file, the script will NOT function properly. and thus close without running.
+        echo WITHOUT repos.txt file, the script will NOT function properly. And thus close without running.
         pause
         exit
     )
@@ -41,4 +41,3 @@ set /p "clonenew=Do you want to clone new repositories? (y/n): "
 if /i "!clonenew!"=="y" (
     call "%~dp0clone_repo.bat"
 )
-pause
