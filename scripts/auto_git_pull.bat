@@ -7,7 +7,7 @@ set "repo_file=repos.txt"
 set "count=0"
 
 for /f "usebackq delims=" %%R in ("%repo_file%") do (
-    echo itteration !count!
+    echo ITTERATION !count!
     set "currentPath=%%R"
     echo Current path: !currentPath!
     cd /d "!currentPath!"
