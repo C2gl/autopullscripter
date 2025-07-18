@@ -29,7 +29,7 @@ if EXIST "%~dp0..\repos.txt" (
         exit
     ) else (
         echo Skipping creation of repos.txt file.
-        echo WITHOUT repos.txt file, the script will NOT function properly. and thus close without running.
+        echo WITHOUT repos.txt file, the script will NOT function properly. And thus close without running.
         pause
         exit
     )
