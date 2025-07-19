@@ -62,9 +62,6 @@ for /f "usebackq delims=" %%R in ("%repo_file%") do (
         !customcommand!
     )
 
-    echo Pulling changes...
-    git pull
-
     echo ----------------------------------
     echo Pull completed for !currentPath!
     echo ----------------------------------
