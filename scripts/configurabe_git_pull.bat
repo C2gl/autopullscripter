@@ -64,6 +64,7 @@ for /f "usebackq delims=" %%R in ("%repo_file%") do (
 
     if /i "!docustomcommand!"=="y" (
         echo Running custom command: !customcommand!
+        echo %date% %time% - Running custom command: !customcommand! >> "%LOG_PATH%"
         !customcommand!
     )
 
