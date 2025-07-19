@@ -15,6 +15,11 @@ set /p "waittime=Enter wait time between pulls (default is 3 seconds): "
 set /p "toFetch=Do you want to fetch latest changes before pulling? (y/n): "
 set /p "docustomcommand=Do you want to run a custom command before pulling? (y/n): "
 
+:: logging user input
+echo %date% %time% - User input: Wait time: !waittime!, Fetch: !toFetch!, Custom command: !docustomcommand! >> "%LOG_PATH%"
+
+
+
 if /i "!docustomcommand!"=="y" (
     set /p "customcommand=Enter the custom command to run: "
 )
