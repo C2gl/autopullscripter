@@ -31,9 +31,8 @@ these questions are self explainatory and clear, but if needed, the different co
 # future features 
 In the (far) future, quite a few features are planned, not to be a usefull repository, but as a fun project to get my hands on some basic coding.
 
-- [ ] the ability to pull new repos
+- [X] the ability to pull new repos
 - [ ] an automated fetcher to see release changes when you didn't keep yourself up to date with the repo for a while
-- [ ] use the script to download new repos automatically 
 - [ ] sort repositories by category and choose what category to pull
 - [ ] the ability to have a cron job
 
