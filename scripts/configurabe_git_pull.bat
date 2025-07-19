@@ -57,11 +57,6 @@ for /f "usebackq delims=" %%R in ("%repo_file%") do (
         echo %date% %time% - ERROR: Path does not exist: !currentPath! >> "%LOG_PATH%"
     )
 
-    
-    if /i "!toFetch!"=="y" (
-        call "%~dp0fetch.bat"
-    ) 
-
     if /i "!docustomcommand!"=="y" (
         echo Running custom command: !customcommand!
         !customcommand!
