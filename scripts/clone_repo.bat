@@ -2,6 +2,10 @@ setlocal enabledelayedexpansion
 
 @ echo off
 
+:: Store the original script directory for logging
+set "SCRIPT_DIR=%~dp0.."
+set "LOG_PATH=%SCRIPT_DIR%\log\%AUTOPULL_LOGFILE%"
+
 :: script to add a new repository URL to the variables and cloning it
 echo what is the URL of the repository you want to add?
 set /p "repo_url=Enter repository URL: "
