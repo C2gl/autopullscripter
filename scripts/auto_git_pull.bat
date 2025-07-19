@@ -10,6 +10,7 @@ set "count=0"
 set "SCRIPT_DIR=%~dp0.."
 set "LOG_PATH=%SCRIPT_DIR%\log\%AUTOPULL_LOGFILE%"
 
+:: loop through each repository path in the file
 for /f "usebackq delims=" %%R in ("%repo_file%") do (
     echo ITTERATION !count!
     set "currentPath=%%R"
