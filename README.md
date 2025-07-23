@@ -1,6 +1,7 @@
 
 [![GitHub release](https://img.shields.io/github/release/c2gl/autopullscripter.svg)](https://github.com/c2gl/autopullscripter/releases)
 [![GitHub issues](https://img.shields.io/github/issues/c2gl/autopullscripter.svg)](https://github.com/c2gl/autopullscripter/issues)
+[![GitHub pull requests](https://img.shields.io/github/issues-pr/c2gl/autopullscripter.svg)](https://github.com/c2gl/autopullscripter/pulls)
 
 A simple .bat script to automatically pull all actively folowed git repos.
 
