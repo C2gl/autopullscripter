@@ -17,17 +17,19 @@ if !fetch_exit_code! neq 0 set "fetch_error=true"
 echo !fetch_output! | findstr /i "error fatal denied permission authentication" >nul
 if !errorlevel! equ 0 set "fetch_error=true"
 
+:: Display the output to user
+type temp_fetch_output.txt
+
+:: Also append complete fetch output to log file
+type temp_fetch_output.txt >> "%LOG_PATH%"
+
 if "!fetch_error!"=="true" (
     echo ERROR ^| Git fetch failed for !currentPath!
     echo %date% %time% - ERROR ^| Git fetch failed for !currentPath! - Exit code: !fetch_exit_code! >> "%LOG_PATH%"
-    echo %date% %time% - ERROR ^| Fetch output: !fetch_output! >> "%LOG_PATH%"
 ) else (
     echo SUCCESS ^| Fetch completed for !currentPath!
     echo %date% %time% - SUCCESS ^| Fetch completed for !currentPath! >> "%LOG_PATH%"
 )
-
-:: Display the output to user
-type temp_fetch_output.txt
 
 :: Clean up temporary file
 del temp_fetch_output.txt

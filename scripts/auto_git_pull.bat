@@ -39,21 +39,23 @@ for /f "usebackq delims=" %%R in ("%repo_file%") do (
         echo !git_output! | findstr /i "error fatal denied permission authentication" >nul
         if !errorlevel! equ 0 set "is_error=true"
         
+        :: Display the output to user
+        type temp_output.txt
+        
+        :: Also append complete git output to log file
+        type temp_output.txt >> "%LOG_PATH%"
+        
         if "!is_error!"=="true" (
             :: Error detected
             set /a ERROR_COUNT+=1
             echo ERROR ^| Git pull failed for !currentPath!
             echo %date% %time% - ERROR ^| Git pull failed for !currentPath! - Exit code: !git_exit_code! >> "%LOG_PATH%"
-            echo %date% %time% - ERROR ^| Output: !git_output! >> "%LOG_PATH%"
         ) else (
             :: Success
             set /a SUCCESS_COUNT+=1
             echo SUCCESS ^| Pull completed for !currentPath!
             echo %date% %time% - SUCCESS ^| Pull completed for !currentPath! >> "%LOG_PATH%"
         )
-        
-        :: Display the output to user
-        type temp_output.txt
         
         :: Clean up temporary file
         del temp_output.txt
