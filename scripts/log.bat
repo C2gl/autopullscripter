@@ -17,5 +17,9 @@ set "dt=%dt:.=-%"
 :: Create unique logfile name and set as environment variable
 set "AUTOPULL_LOGFILE=log_%dt%.txt"
 
+:: Initialize counters
+set "SUCCESS_COUNT=0"
+set "ERROR_COUNT=0"
+
 :: Write to the unique logfile
 echo %date% %time% - Session started >> "log\%AUTOPULL_LOGFILE%"

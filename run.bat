@@ -22,5 +22,14 @@ if /i "%auto%"=="y" (
 
 echo Program finished.
 echo ----------------------------------
+if defined SUCCESS_COUNT if defined ERROR_COUNT (
+    echo.
+    echo ==================================
+    echo FINAL SUMMARY
+    echo ==================================
+    echo Total successful operations: %SUCCESS_COUNT%
+    echo Total failed operations: %ERROR_COUNT%
+    echo ==================================
+)
 echo %date% %time% - Program finished. >> "log\%AUTOPULL_LOGFILE%"
 pause
