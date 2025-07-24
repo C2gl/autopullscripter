@@ -23,9 +23,13 @@ for /f "usebackq delims=" %%R in ("%repo_file%") do (
         
         echo Pulling changes...
         
-        :: Capture git pull output and exit code
-        git pull > temp_output.txt 2>&1
+        :: First display git pull with colors to terminal
+        echo %date% %time% - Starting git pull for !currentPath! >> "%LOG_PATH%"
+        git -c color.ui=always pull
         set "git_exit_code=!errorlevel!"
+        
+        :: Capture git pull output for error detection (without colors for parsing)
+        git pull > temp_output.txt 2>&1
         
         :: Read the output for error detection
         set "git_output="
@@ -39,10 +43,7 @@ for /f "usebackq delims=" %%R in ("%repo_file%") do (
         echo !git_output! | findstr /i "error fatal denied permission authentication" >nul
         if !errorlevel! equ 0 set "is_error=true"
         
-        :: Display the output to user
-        type temp_output.txt
-        
-        :: Also append complete git output to log file
+        :: Append git output to log file (without colors for clean logs)
         type temp_output.txt >> "%LOG_PATH%"
         
         if "!is_error!"=="true" (
