@@ -1,33 +1,68 @@
 @echo off
 setlocal enabledelayedexpansion
 
-:: variables 
+:: Default variables 
 set "waittime=3"
 set "repo_file=repos.txt"
 set "count=0"
+set "toFetch=n"
+set "docustomcommand=n"
+set "customcommand="
 
 :: Store the original script directory for logging
 set "SCRIPT_DIR=%~dp0.."
 set "LOG_PATH=%SCRIPT_DIR%\log\%AUTOPULL_LOGFILE%"
 
-:: user set variables 
-set /p "waittime=Enter wait time between pulls (default is 3 seconds): "
-set /p "toFetch=Do you want to fetch latest changes before pulling? (y/n): "
-set /p "docustomcommand=Do you want to run a custom command before pulling? (y/n): "
+:: Ask if user wants to use default settings
+echo ==================================
+echo Auto Git Pull Script
+echo ==================================
+echo Default settings:
+echo - Wait time: 3 seconds between pulls
+echo - Fetch before pull: No
+echo - Custom command: No
+echo ==================================
+echo.
+set /p "useDefaults=Use default settings? (y/n, default is y): "
 
-:: logging user input
-echo %date% %time% - User input: Wait time: !waittime!, Fetch: !toFetch!, Custom command: !docustomcommand! >> "%LOG_PATH%"
+:: If empty input, default to yes
+if "!useDefaults!"=="" set "useDefaults=y"
 
-
-
-if /i "!docustomcommand!"=="y" (
-    set /p "customcommand=Enter the custom command to run: "
+if /i "!useDefaults!"=="y" (
+    echo Using default settings...
+    echo %date% %time% - Using default settings: Wait time: !waittime!, Fetch: !toFetch!, Custom command: !docustomcommand! >> "%LOG_PATH%"
+) else (
+    echo Configuring custom settings...
+    
+    :: Custom user input
+    set /p "waittime=Enter wait time between pulls (default is 3 seconds): "
+    set /p "toFetch=Do you want to fetch latest changes before pulling? (y/n): "
+    set /p "docustomcommand=Do you want to run a custom command after pulling? (y/n): "
+    
+    :: Validate and set defaults for empty inputs
+    if "!waittime!"=="" set "waittime=3"
+    if "!toFetch!"=="" set "toFetch=n"
+    if "!docustomcommand!"=="" set "docustomcommand=n"
+    
+    :: logging user input
+    echo %date% %time% - Custom settings: Wait time: !waittime!, Fetch: !toFetch!, Custom command: !docustomcommand! >> "%LOG_PATH%"
+    
+    if /i "!docustomcommand!"=="y" (
+        set /p "customcommand=Enter the custom command to run: "
+    )
 )
 
+echo.
+echo Starting git pull process with settings:
+echo - Wait time: !waittime! seconds
+echo - Fetch before pull: !toFetch!
+echo - Custom command: !docustomcommand!
+if /i "!docustomcommand!"=="y" echo - Command: !customcommand!
+echo.
 
 :: loop through each repository path in the file
 for /f "usebackq delims=" %%R in ("%repo_file%") do (
-    echo ITTERATION !count!
+    echo ITERATION !count!
     set "currentPath=%%R"
     echo Current path: !currentPath!
     
@@ -36,6 +71,7 @@ for /f "usebackq delims=" %%R in ("%repo_file%") do (
         echo %date% %time% - Processing repository: !currentPath! >> "%LOG_PATH%"
         cd /d "!currentPath!"
 
+        :: Optional fetch before pull
         if /i "!toFetch!"=="y" (
             echo Fetching latest changes from the remote repository before pulling...
             call "%~dp0fetch.bat"
@@ -80,12 +116,14 @@ for /f "usebackq delims=" %%R in ("%repo_file%") do (
         
         :: Clean up temporary file
         del temp_output.txt
+        
     ) else (
         set /a ERROR_COUNT+=1
         echo ERROR ^| Path does not exist: !currentPath!
         echo %date% %time% - ERROR ^| Path does not exist: !currentPath! >> "%LOG_PATH%"
     )
 
+    :: Optional custom command execution
     if /i "!docustomcommand!"=="y" (
         echo Running custom command: !customcommand!
         echo %date% %time% - Running custom command: !customcommand! >> "%LOG_PATH%"
@@ -97,18 +135,18 @@ for /f "usebackq delims=" %%R in ("%repo_file%") do (
     echo ----------------------------------
 
     set /a count+=1
-    echo Waiting for %waittime% seconds before next pull...
-    timeout /t %waittime% >nul
+    echo Waiting for !waittime! seconds before next pull...
+    timeout /t !waittime! >nul
 )
 
-echo Total pulls: %count%
+echo Total pulls: !count!
 echo.
 echo ==================================
 echo SUMMARY
 echo ==================================
-echo Total repositories processed: %count%
-echo Successful operations: %SUCCESS_COUNT%
-echo Failed operations: %ERROR_COUNT%
+echo Total repositories processed: !count!
+echo Successful operations: !SUCCESS_COUNT!
+echo Failed operations: !ERROR_COUNT!
 echo ==================================
-echo %date% %time% - Configurable git pull process completed. Total: %count%, Success: %SUCCESS_COUNT%, Errors: %ERROR_COUNT% >> "%LOG_PATH%"
+echo %date% %time% - Git pull process completed. Total: !count!, Success: !SUCCESS_COUNT!, Errors: !ERROR_COUNT! >> "%LOG_PATH%"
 pause
