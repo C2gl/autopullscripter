@@ -8,10 +8,23 @@ set "count=0"
 set "toFetch=n"
 set "docustomcommand=n"
 set "customcommand="
+set "total_repos=0"
+set "SUCCESS_COUNT=0"
+set "ERROR_COUNT=0"
 
 :: Store the original script directory for logging
 set "SCRIPT_DIR=%~dp0.."
 set "LOG_PATH=%SCRIPT_DIR%\log\%AUTOPULL_LOGFILE%"
+
+:: Count total repositories (excluding empty lines)
+echo Counting repositories...
+for /f "usebackq delims=" %%R in ("%repo_file%") do (
+    set "line=%%R"
+    if not "!line!"=="" (
+        set /a total_repos+=1
+    )
+)
+echo Found !total_repos! repositories to process.
 
 :: Ask if user wants to use default settings
 echo ==================================
@@ -58,13 +71,25 @@ echo - Wait time: !waittime! seconds
 echo - Fetch before pull: !toFetch!
 echo - Custom command: !docustomcommand!
 if /i "!docustomcommand!"=="y" echo - Command: !customcommand!
+echo - Total repositories: !total_repos!
 echo.
 
 :: loop through each repository path in the file
 for /f "usebackq delims=" %%R in ("%repo_file%") do (
-    echo ITERATION !count!
     set "currentPath=%%R"
-    echo Current path: !currentPath!
+    
+    :: Skip empty lines
+    if not "!currentPath!"=="" (
+        set /a count+=1
+        
+        echo.
+        echo ==================================
+        echo PROCESSING REPOSITORY !count!/!total_repos!
+        echo ==================================
+        echo Current path: !currentPath!
+        
+        :: Show progress bar
+        call :show_progress !count! !total_repos!
     
     :: Check if path exists before trying to cd
     if exist "!currentPath!" (
@@ -131,22 +156,57 @@ for /f "usebackq delims=" %%R in ("%repo_file%") do (
     )
 
     echo ----------------------------------
-    echo Pull completed for !currentPath!
+    echo Completed repository !count!/!total_repos!: !currentPath!
     echo ----------------------------------
 
-    set /a count+=1
-    echo Waiting for !waittime! seconds before next pull...
-    timeout /t !waittime! >nul
+    if !count! lss !total_repos! (
+        echo Waiting for !waittime! seconds before next pull...
+        timeout /t !waittime! >nul
+    )
+    
+    ) else (
+        echo Skipping empty line in repos.txt
+    )
 )
 
-echo Total pulls: !count!
+echo.
+echo ==================================
+echo ALL REPOSITORIES PROCESSED!
+echo ==================================
+call :show_progress !total_repos! !total_repos!
 echo.
 echo ==================================
 echo SUMMARY
 echo ==================================
-echo Total repositories processed: !count!
+echo Total repositories processed: !total_repos!
 echo Successful operations: !SUCCESS_COUNT!
 echo Failed operations: !ERROR_COUNT!
 echo ==================================
-echo %date% %time% - Git pull process completed. Total: !count!, Success: !SUCCESS_COUNT!, Errors: !ERROR_COUNT! >> "%LOG_PATH%"
+echo %date% %time% - Git pull process completed. Total: !total_repos!, Success: !SUCCESS_COUNT!, Errors: !ERROR_COUNT! >> "%LOG_PATH%"
 pause
+
+:: Function to display progress bar
+:show_progress
+setlocal enabledelayedexpansion
+set "current=%1"
+set "total=%2"
+set "bar_length=20"
+set "filled=0"
+set "progress_bar="
+
+:: Calculate filled portion
+set /a "filled=(!current! * !bar_length!) / !total!"
+
+:: Build progress bar
+for /l %%i in (1,1,!bar_length!) do (
+    if %%i leq !filled! (
+        set "progress_bar=!progress_bar!#"
+    ) else (
+        set "progress_bar=!progress_bar!-"
+    )
+)
+
+:: Display progress bar
+echo Progress: [!progress_bar!] (!current!/!total!)
+endlocal
+goto :eof
