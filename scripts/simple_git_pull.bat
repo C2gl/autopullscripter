@@ -2,7 +2,7 @@
 setlocal enabledelayedexpansion
 
 :: Default variables 
-set "waittime=3"
+set "waittime=1"
 set "repo_file=repos.txt"
 set "count=0"
 set "toFetch=n"
@@ -32,7 +32,7 @@ echo ==================================
 echo Auto Git Pull Script
 echo ==================================
 echo Default settings:
-echo - Wait time: 3 seconds between pulls
+echo - Wait time: 1 seconds between pulls
 echo - Fetch before pull: No
 echo - Custom command: No
 echo - verbose mode: No
@@ -56,7 +56,7 @@ if /i "!useDefaults!"=="y" (
     set /p "verbose=Enable verbose mode? (y/n, default is n): "
 
     :: Validate and set defaults for empty inputs
-    if "!waittime!"=="" set "waittime=3"
+    if "!waittime!"=="" set "waittime=1"
     if "!toFetch!"=="" set "toFetch=n"
     if "!docustomcommand!"=="" set "docustomcommand=n"
     if "!verbose!"=="" set "verbose=n"
