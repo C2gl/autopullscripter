@@ -86,14 +86,21 @@ for /f "usebackq delims=" %%R in ("%repo_file%") do (
     if not "!currentPath!"=="" (
         set /a count+=1
         
-        echo.
-        echo ==================================
-        echo PROCESSING REPOSITORY !count!/!total_repos!
-        echo ==================================
-        echo Current path: !currentPath!
-        
-        :: Show progress bar
-        call :show_progress !count! !total_repos!
+        if /i "!verbose!"=="y" (
+            echo.
+            echo ==================================
+            echo PROCESSING REPOSITORY !count!/!total_repos!
+            echo ==================================
+            echo Current path: !currentPath!
+            
+            :: Show progress bar
+            call :show_progress !count! !total_repos!
+        ) else (
+            :: Condensed output for non-verbose mode
+            for %%F in ("!currentPath!") do set "repo_name=%%~nxF"
+            echo [!count!/!total_repos!] !repo_name!
+            call :show_progress !count! !total_repos!
+        )
     
     :: Check if path exists before trying to cd
     if exist "!currentPath!" (
@@ -102,12 +109,18 @@ for /f "usebackq delims=" %%R in ("%repo_file%") do (
 
         :: Optional fetch before pull
         if /i "!toFetch!"=="y" (
-            echo Fetching latest changes from the remote repository before pulling...
+            if /i "!verbose!"=="y" (
+                echo Fetching latest changes from the remote repository before pulling...
+            )
             call "%~dp0fetch.bat"
-            echo Fetch completed for !currentPath!
+            if /i "!verbose!"=="y" (
+                echo Fetch completed for !currentPath!
+            )
         )
 
-        echo Pulling changes...
+        if /i "!verbose!"=="y" (
+            echo Pulling changes...
+        )
         
         :: Capture git pull output and exit code
         git pull > temp_output.txt 2>&1
@@ -125,8 +138,10 @@ for /f "usebackq delims=" %%R in ("%repo_file%") do (
         echo !git_output! | findstr /i "error fatal denied permission authentication" >nul
         if !errorlevel! equ 0 set "is_error=true"
         
-        :: Display the output to user
-        type temp_output.txt
+        :: Display the output to user (only in verbose mode)
+        if /i "!verbose!"=="y" (
+            type temp_output.txt
+        )
         
         :: Also append complete git output to log file
         type temp_output.txt >> "%LOG_PATH%"
@@ -134,12 +149,20 @@ for /f "usebackq delims=" %%R in ("%repo_file%") do (
         if "!is_error!"=="true" (
             :: Error detected
             set /a ERROR_COUNT+=1
-            echo ERROR ^| Git pull failed for !currentPath!
+            if /i "!verbose!"=="y" (
+                echo ERROR ^| Git pull failed for !currentPath!
+            ) else (
+                echo ERROR
+            )
             echo %date% %time% - ERROR ^| Git pull failed for !currentPath! - Exit code: !git_exit_code! >> "%LOG_PATH%"
         ) else (
             :: Success
             set /a SUCCESS_COUNT+=1
-            echo SUCCESS ^| Pull completed for !currentPath!
+            if /i "!verbose!"=="y" (
+                echo SUCCESS ^| Pull completed for !currentPath!
+            ) else (
+                echo OK
+            )
             echo %date% %time% - SUCCESS ^| Pull completed for !currentPath! >> "%LOG_PATH%"
         )
         
@@ -148,24 +171,36 @@ for /f "usebackq delims=" %%R in ("%repo_file%") do (
         
     ) else (
         set /a ERROR_COUNT+=1
-        echo ERROR ^| Path does not exist: !currentPath!
+        if /i "!verbose!"=="y" (
+            echo ERROR ^| Path does not exist: !currentPath!
+        ) else (
+            echo PATH NOT FOUND
+        )
         echo %date% %time% - ERROR ^| Path does not exist: !currentPath! >> "%LOG_PATH%"
     )
 
     :: Optional custom command execution
     if /i "!docustomcommand!"=="y" (
-        echo Running custom command: !customcommand!
+        if /i "!verbose!"=="y" (
+            echo Running custom command: !customcommand!
+        )
         echo %date% %time% - Running custom command: !customcommand! >> "%LOG_PATH%"
         !customcommand!
     )
 
-    echo ----------------------------------
-    echo Completed repository !count!/!total_repos!: !currentPath!
-    echo ----------------------------------
+    if /i "!verbose!"=="y" (
+        echo ----------------------------------
+        echo Completed repository !count!/!total_repos!: !currentPath!
+        echo ----------------------------------
 
-    if !count! lss !total_repos! (
-        echo Waiting for !waittime! seconds before next pull...
-        timeout /t !waittime! >nul
+        if !count! lss !total_repos! (
+            echo Waiting for !waittime! seconds before next pull...
+            timeout /t !waittime! >nul
+        )
+    ) else (
+        if !count! lss !total_repos! (
+            timeout /t !waittime! >nul
+        )
     )
     
     ) else (
