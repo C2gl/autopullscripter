@@ -11,6 +11,7 @@ set "customcommand="
 set "total_repos=0"
 set "SUCCESS_COUNT=0"
 set "ERROR_COUNT=0"
+set "verbose=n"
 
 :: Store the original script directory for logging
 set "SCRIPT_DIR=%~dp0.."
@@ -34,6 +35,7 @@ echo Default settings:
 echo - Wait time: 3 seconds between pulls
 echo - Fetch before pull: No
 echo - Custom command: No
+echo - verbose mode: No
 echo ==================================
 echo.
 set /p "useDefaults=Use default settings? (y/n, default is y): "
@@ -51,15 +53,17 @@ if /i "!useDefaults!"=="y" (
     set /p "waittime=Enter wait time between pulls (default is 3 seconds): "
     set /p "toFetch=Do you want to fetch latest changes before pulling? (y/n): "
     set /p "docustomcommand=Do you want to run a custom command after pulling? (y/n): "
-    
+    set /p "verbose=Enable verbose mode? (y/n, default is n): "
+
     :: Validate and set defaults for empty inputs
     if "!waittime!"=="" set "waittime=3"
     if "!toFetch!"=="" set "toFetch=n"
     if "!docustomcommand!"=="" set "docustomcommand=n"
+    if "!verbose!"=="" set "verbose=n"
     
     :: logging user input
-    echo %date% %time% - Custom settings: Wait time: !waittime!, Fetch: !toFetch!, Custom command: !docustomcommand! >> "%LOG_PATH%"
-    
+    echo %date% %time% - Custom settings: Wait time: !waittime!, Fetch: !toFetch!, Custom command: !docustomcommand!, verbose mode : !verbose! >> "%LOG_PATH%"
+
     if /i "!docustomcommand!"=="y" (
         set /p "customcommand=Enter the custom command to run: "
     )
