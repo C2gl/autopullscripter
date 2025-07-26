@@ -224,6 +224,8 @@ echo ==================================
 echo %date% %time% - Git pull process completed. Total: !total_repos!, Success: !SUCCESS_COUNT!, Errors: !ERROR_COUNT! >> "%LOG_PATH%"
 pause
 
+exit /b
+
 :: Function to display progress bar
 :show_progress
 setlocal enabledelayedexpansion
