@@ -1,4 +1,6 @@
-echo    --- Fetching latest changes from the remote repository before pulling...
+if /i "!verbose!"=="y" (
+    echo    --- Fetching latest changes from the remote repository before pulling...
+)
 echo %date% %time% - Fetching latest changes for !currentPath! >> "%LOG_PATH%"
 
 :: Capture git fetch output and exit code
@@ -17,21 +19,33 @@ if !fetch_exit_code! neq 0 set "fetch_error=true"
 echo !fetch_output! | findstr /i "error fatal denied permission authentication" >nul
 if !errorlevel! equ 0 set "fetch_error=true"
 
-:: Display the output to user
-type temp_fetch_output.txt
+:: Display the output to user (only in verbose mode)
+if /i "!verbose!"=="y" (
+    type temp_fetch_output.txt
+)
 
 :: Also append complete fetch output to log file
 type temp_fetch_output.txt >> "%LOG_PATH%"
 
 if "!fetch_error!"=="true" (
-    echo ERROR ^| Git fetch failed for !currentPath!
+    if /i "!verbose!"=="y" (
+        echo ERROR ^| Git fetch failed for !currentPath!
+    )
+if "!fetch_error!"=="true" (
+    if /i "!verbose!"=="y" (
+        echo ERROR ^| Git fetch failed for !currentPath!
+    )
     echo %date% %time% - ERROR ^| Git fetch failed for !currentPath! - Exit code: !fetch_exit_code! >> "%LOG_PATH%"
 ) else (
-    echo SUCCESS ^| Fetch completed for !currentPath!
+    if /i "!verbose!"=="y" (
+        echo SUCCESS ^| Fetch completed for !currentPath!
+    )
     echo %date% %time% - SUCCESS ^| Fetch completed for !currentPath! >> "%LOG_PATH%"
 )
 
 :: Clean up temporary file
 del temp_fetch_output.txt
 
-echo ----------------------------------
+if /i "!verbose!"=="y" (
+    echo ----------------------------------
+)
