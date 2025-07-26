@@ -19,37 +19,77 @@ if EXIST "%~dp0..\repos.txt" (
 set "SCRIPT_DIR=%~dp0.."
 set "LOG_PATH=%SCRIPT_DIR%\log\%AUTOPULL_LOGFILE%"
     timeout /t 5
-    echo Would you like for the script to create a new repos.txt file?
-    set /p "create=Do you want to create a new repos.txt file? (y/n): "
-    echo %date% %time% - User input: Create repos.txt: !create! >> "%LOG_PATH%"
-    if /i "!create!"=="y" (
-        echo Creating repos.txt file...
+    echo.
+    echo What would you like to do?
+    echo 1. Create empty repos.txt file and add repositories manually
+    echo 2. Scan a folder path for existing Git repositories
+    echo 3. Exit without creating repos.txt
+    echo.
+    set /p "choice=Enter your choice (1/2/3): "
+    echo %date% %time% - User input: repos.txt creation choice: !choice! >> "%LOG_PATH%"
+    
+    if "!choice!"=="1" (
+        echo Creating empty repos.txt file...
         type nul > "%~dp0..\repos.txt"
         echo repos.txt file created in parent directory.
-        echo %date% %time% - repos.txt file created in parent directory. >> "%LOG_PATH%"
+        echo %date% %time% - Empty repos.txt file created in parent directory. >> "%LOG_PATH%"
         set /p "addrepos=Do you want to add repository paths to repos.txt now? (y/n): "
         echo %date% %time% - User input: Add repositories: !addrepos! >> "%LOG_PATH%"
         if /i "!addrepos!"=="y" (
             call "%~dp0clone_repo.bat"
-            call run.bat
-
+        ) else (
+            echo Please edit the repos.txt file to add your repository paths.
+            echo Run the script again after editing the repos.txt file.
+            pause
+            exit
         )
-        echo Please edit the repos.txt file to add your repository URLs.
-        echo Run the script again after editing the repos.txt file.
+    ) else if "!choice!"=="2" (
+        echo Starting repository scanner...
+        call "%~dp0scan_repos.bat"
+        :: Check if repos.txt was created and has content
+        if exist "%~dp0..\repos.txt" (
+            for /f %%A in ('type "%~dp0..\repos.txt" ^| find /c /v ""') do set "line_count=%%A"
+            if !line_count! gtr 0 (
+                echo repos.txt has been populated with !line_count! repositories.
+                echo %date% %time% - repos.txt populated with !line_count! repositories via scan. >> "%LOG_PATH%"
+            ) else (
+                echo repos.txt exists but is empty. Please add repository paths manually.
+                pause
+                exit
+            )
+        ) else (
+            echo repos.txt was not created. Exiting.
+            pause
+            exit
+        )
+    ) else if "!choice!"=="3" (
+        echo Skipping creation of repos.txt file.
+        echo WITHOUT repos.txt file, the script will NOT function properly. And thus close without running.
         pause
         exit
     ) else (
-        echo Skipping creation of repos.txt file.
-        echo WITHOUT repos.txt file, the script will NOT function properly. And thus close without running.
+        echo Invalid choice. Please run the script again and select 1, 2, or 3.
         pause
         exit
     )
 )
 
-:: prompting user if they want to clone new repositories
-set /p "clonenew=Do you want to clone new repositories? (y/n): "
-echo %date% %time% - User input: Clone new repositories: !clonenew! >> "%LOG_PATH%"
+:: prompting user if they want to clone new repositories or scan for existing ones
+echo.
+echo Additional options:
+echo 1. Clone new repositories (add new remote repos)
+echo 2. Scan folder for existing repositories (add local repos)
+echo 3. Continue with current repos.txt
+echo.
+set /p "action_choice=What would you like to do? (1/2/3): "
+echo %date% %time% - User input: Action choice: !action_choice! >> "%LOG_PATH%"
 
-if /i "!clonenew!"=="y" (
+if "!action_choice!"=="1" (
     call "%~dp0clone_repo.bat"
+) else if "!action_choice!"=="2" (
+    call "%~dp0scan_repos.bat"
+) else if "!action_choice!"=="3" (
+    echo Continuing with current repos.txt...
+) else (
+    echo Invalid choice. Continuing with current repos.txt...
 )
