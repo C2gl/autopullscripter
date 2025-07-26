@@ -7,6 +7,7 @@ for /f %%a in ('echo prompt $E ^| cmd') do set "ESC=%%a"
 :: Color codes
 set "RED=%ESC%[91m"
 set "GREEN=%ESC%[92m"
+set "YELLOW=%ESC%[93m"
 set "LIGHT_BLUE=%ESC%[94m"
 set "RESET=%ESC%[0m"
 
@@ -135,17 +136,22 @@ for /f "usebackq delims=" %%R in ("%repo_file%") do (
         git pull > temp_output.txt 2>&1
         set "git_exit_code=!errorlevel!"
         
-        :: Read the output for error detection
-        set "git_output="
-        for /f "delims=" %%i in (temp_output.txt) do (
-            set "git_output=!git_output!%%i "
-        )
-        
-        :: Check for errors (exit code or common error patterns)
+        :: Check for errors and status using the temp file directly (safer than building a variable)
         set "is_error=false"
+        set "is_up_to_date=false"
+        set "has_changes=false"
+        
         if !git_exit_code! neq 0 set "is_error=true"
-        echo !git_output! | findstr /i "error fatal denied permission authentication" >nul
+        findstr /i "error fatal denied permission authentication" temp_output.txt >nul 2>&1
         if !errorlevel! equ 0 set "is_error=true"
+        
+        :: Check if already up to date
+        findstr /i "already up.to.date" temp_output.txt >nul 2>&1
+        if !errorlevel! equ 0 set "is_up_to_date=true"
+        
+        :: Check if changes were pulled (common indicators)
+        findstr /i "fast.forward updating files changed insertions deletions" temp_output.txt >nul 2>&1
+        if !errorlevel! equ 0 set "has_changes=true"
         
         :: Display the output to user (only in verbose mode)
         if /i "!verbose!"=="y" (
@@ -164,15 +170,33 @@ for /f "usebackq delims=" %%R in ("%repo_file%") do (
                 echo %RED%ERROR%RESET%
             )
             echo %date% %time% - ERROR ^| Git pull failed for !currentPath! - Exit code: !git_exit_code! >> "%LOG_PATH%"
-        ) else (
-            :: Success
+        ) else if "!is_up_to_date!"=="true" (
+            :: Already up to date
             set /a SUCCESS_COUNT+=1
             if /i "!verbose!"=="y" (
-                echo %GREEN%SUCCESS%RESET% ^| Pull completed for !currentPath!
+                echo %YELLOW%OK - ALREADY UP TO DATE%RESET% ^| No changes for !currentPath!
+            ) else (
+                echo %YELLOW%OK - ALREADY UP TO DATE%RESET%
+            )
+            echo %date% %time% - OK - ALREADY UP TO DATE ^| No changes for !currentPath! >> "%LOG_PATH%"
+        ) else if "!has_changes!"=="true" (
+            :: Changes were pulled
+            set /a SUCCESS_COUNT+=1
+            if /i "!verbose!"=="y" (
+                echo %GREEN%OK - PULLED NEW CHANGES%RESET% ^| Changes pulled for !currentPath!
+            ) else (
+                echo %GREEN%OK - PULLED NEW CHANGES%RESET%
+            )
+            echo %date% %time% - OK - PULLED NEW CHANGES ^| Changes pulled for !currentPath! >> "%LOG_PATH%"
+        ) else (
+            :: Generic success (fallback)
+            set /a SUCCESS_COUNT+=1
+            if /i "!verbose!"=="y" (
+                echo %GREEN%OK%RESET% ^| Pull completed for !currentPath!
             ) else (
                 echo %GREEN%OK%RESET%
             )
-            echo %date% %time% - SUCCESS ^| Pull completed for !currentPath! >> "%LOG_PATH%"
+            echo %date% %time% - OK ^| Pull completed for !currentPath! >> "%LOG_PATH%"
         )
         
         :: Clean up temporary file
