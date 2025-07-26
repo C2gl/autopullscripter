@@ -7,6 +7,7 @@ for /f %%a in ('echo prompt $E ^| cmd') do set "ESC=%%a"
 :: Color codes
 set "RED=%ESC%[91m"
 set "GREEN=%ESC%[92m"
+set "LIGHT_BLUE=%ESC%[94m"
 set "RESET=%ESC%[0m"
 
 :: Default variables 
@@ -99,14 +100,14 @@ for /f "usebackq delims=" %%R in ("%repo_file%") do (
             echo ==================================
             echo PROCESSING REPOSITORY !count!/!total_repos!
             echo ==================================
-            echo Current path: !currentPath!
+            echo Current path: %LIGHT_BLUE%!currentPath!%RESET%
             
             :: Show progress bar
             call :show_progress !count! !total_repos!
         ) else (
             :: Condensed output for non-verbose mode
             for %%F in ("!currentPath!") do set "repo_name=%%~nxF"
-            echo [!count!/!total_repos!] !repo_name!
+            echo [!count!/!total_repos!] %LIGHT_BLUE%!repo_name!%RESET%
             call :show_progress !count! !total_repos!
         )
     
