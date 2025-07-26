@@ -128,7 +128,7 @@ for /f "usebackq delims=" %%R in ("%repo_file%") do (
             if /i "!verbose!"=="y" (
                 echo Fetching latest changes from the remote repository before pulling...
             )
-            call "%~dp0fetch.bat"
+            call "%~dp0fetch.bat" "!verbose!"
             if /i "!verbose!"=="y" (
                 echo Fetch completed for !currentPath!
             )

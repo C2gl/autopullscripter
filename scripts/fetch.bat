@@ -1,3 +1,7 @@
+:: Accept verbose parameter (default to 'n' if not provided)
+set "verbose=%~1"
+if "!verbose!"=="" set "verbose=n"
+
 if /i "!verbose!"=="y" (
     echo    --- Fetching latest changes from the remote repository before pulling...
 )
@@ -27,10 +31,6 @@ if /i "!verbose!"=="y" (
 :: Also append complete fetch output to log file
 type temp_fetch_output.txt >> "%LOG_PATH%"
 
-if "!fetch_error!"=="true" (
-    if /i "!verbose!"=="y" (
-        echo ERROR ^| Git fetch failed for !currentPath!
-    )
 if "!fetch_error!"=="true" (
     if /i "!verbose!"=="y" (
         echo ERROR ^| Git fetch failed for !currentPath!
