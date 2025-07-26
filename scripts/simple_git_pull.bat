@@ -1,6 +1,14 @@
 @echo off
 setlocal enabledelayedexpansion
 
+:: Enable ANSI escape sequences for color support
+for /f %%a in ('echo prompt $E ^| cmd') do set "ESC=%%a"
+
+:: Color codes
+set "RED=%ESC%[91m"
+set "GREEN=%ESC%[92m"
+set "RESET=%ESC%[0m"
+
 :: Default variables 
 set "waittime=1"
 set "repo_file=repos.txt"
@@ -150,18 +158,18 @@ for /f "usebackq delims=" %%R in ("%repo_file%") do (
             :: Error detected
             set /a ERROR_COUNT+=1
             if /i "!verbose!"=="y" (
-                echo ERROR ^| Git pull failed for !currentPath!
+                echo %RED%ERROR%RESET% ^| Git pull failed for !currentPath!
             ) else (
-                echo ERROR
+                echo %RED%ERROR%RESET%
             )
             echo %date% %time% - ERROR ^| Git pull failed for !currentPath! - Exit code: !git_exit_code! >> "%LOG_PATH%"
         ) else (
             :: Success
             set /a SUCCESS_COUNT+=1
             if /i "!verbose!"=="y" (
-                echo SUCCESS ^| Pull completed for !currentPath!
+                echo %GREEN%SUCCESS%RESET% ^| Pull completed for !currentPath!
             ) else (
-                echo OK
+                echo %GREEN%OK%RESET%
             )
             echo %date% %time% - SUCCESS ^| Pull completed for !currentPath! >> "%LOG_PATH%"
         )
@@ -172,9 +180,9 @@ for /f "usebackq delims=" %%R in ("%repo_file%") do (
     ) else (
         set /a ERROR_COUNT+=1
         if /i "!verbose!"=="y" (
-            echo ERROR ^| Path does not exist: !currentPath!
+            echo %RED%ERROR%RESET% ^| Path does not exist: !currentPath!
         ) else (
-            echo PATH NOT FOUND
+            echo %RED%PATH NOT FOUND%RESET%
         )
         echo %date% %time% - ERROR ^| Path does not exist: !currentPath! >> "%LOG_PATH%"
     )
