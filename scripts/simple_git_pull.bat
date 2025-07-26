@@ -21,6 +21,7 @@ set "customcommand="
 set "total_repos=0"
 set "SUCCESS_COUNT=0"
 set "ERROR_COUNT=0"
+set "UPDATED_COUNT=0"
 set "verbose=n"
 
 :: Store the original script directory for logging
@@ -182,6 +183,7 @@ for /f "usebackq delims=" %%R in ("%repo_file%") do (
         ) else if "!has_changes!"=="true" (
             :: Changes were pulled
             set /a SUCCESS_COUNT+=1
+            set /a UPDATED_COUNT+=1
             if /i "!verbose!"=="y" (
                 echo %GREEN%OK - PULLED NEW CHANGES%RESET% ^| Changes pulled for !currentPath!
             ) else (
@@ -252,9 +254,10 @@ echo SUMMARY
 echo ==================================
 echo Total repositories processed: !total_repos!
 echo Successful operations: !SUCCESS_COUNT!
+echo Repositories updated: !UPDATED_COUNT!
 echo Failed operations: !ERROR_COUNT!
 echo ==================================
-echo %date% %time% - Git pull process completed. Total: !total_repos!, Success: !SUCCESS_COUNT!, Errors: !ERROR_COUNT! >> "%LOG_PATH%"
+echo %date% %time% - Git pull process completed. Total: !total_repos!, Success: !SUCCESS_COUNT!, Updated: !UPDATED_COUNT!, Errors: !ERROR_COUNT! >> "%LOG_PATH%"
 pause
 
 exit /b
