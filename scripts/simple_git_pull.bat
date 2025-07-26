@@ -245,7 +245,10 @@ for /l %%i in (1,1,!bar_length!) do (
     )
 )
 
+:: calculate percentage
+set /a "percentage=(!current! * 100) / !total!"
+
 :: Display progress bar
-echo Progress: [!progress_bar!] (!current!/!total!)
+echo Progress: [!progress_bar!] !percentage!%% complete
 endlocal
 goto :eof
