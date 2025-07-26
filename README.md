@@ -79,7 +79,7 @@ After processing all repositories, you'll see a summary showing:
 - Repositories that received updates
 - Failed operations
 # Future Features 
-In the (far) future, quite a few features are planned, not to be a useful repository, but as a fun project to get my hands on some basic coding.
+In the (far) future, quite a few features are planned. This is not meant to be a comprehensive tool, but rather a fun project to practice basic coding.
 
 - [X] The ability to pull new repos
 - [X] Automatically populate the repos.txt
