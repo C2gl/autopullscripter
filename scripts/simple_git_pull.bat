@@ -89,6 +89,11 @@ if /i "!docustomcommand!"=="y" echo - Command: !customcommand!
 echo - Total repositories: !total_repos!
 echo.
 
+:: Ensure counters are properly initialized before the loop
+set "SUCCESS_COUNT=0"
+set "ERROR_COUNT=0"
+set "UPDATED_COUNT=0"
+
 :: loop through each repository path in the file
 for /f "usebackq delims=" %%R in ("%repo_file%") do (
     set "currentPath=%%R"
