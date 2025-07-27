@@ -224,8 +224,7 @@ for /f "usebackq delims=" %%R in ("%repo_file%") do (
         if /i "!verbose!"=="y" (
             echo Running custom command: !customcommand!
         )
-        echo %date% %time% - Running custom command: !customcommand! >> "%LOG_PATH%"
-        !customcommand!
+        call "%~dp0customcommand.bat" "!customcommand!"
     )
 
     if /i "!verbose!"=="y" (
