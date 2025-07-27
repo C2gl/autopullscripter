@@ -9,6 +9,7 @@ set "RED=%ESC%[91m"
 set "GREEN=%ESC%[92m"
 set "YELLOW=%ESC%[93m"
 set "LIGHT_BLUE=%ESC%[94m"
+set "GRAY=%ESC%[90m"
 set "RESET=%ESC%[0m"
 
 :: Default variables 
@@ -161,7 +162,9 @@ for /f "usebackq delims=" %%R in ("%repo_file%") do (
         
         :: Display the output to user (only in verbose mode)
         if /i "!verbose!"=="y" (
+            echo %GRAY%
             type temp_output.txt
+            echo %RESET%
         )
         
         :: Also append complete git output to log file

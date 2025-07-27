@@ -1,3 +1,13 @@
+@echo off
+setlocal enabledelayedexpansion
+
+:: Enable ANSI escape sequences for color support
+for /f %%a in ('echo prompt $E ^| cmd') do set "ESC=%%a"
+
+:: Color codes
+set "GRAY=%ESC%[90m"
+set "RESET=%ESC%[0m"
+
 :: Accept verbose parameter (default to 'n' if not provided)
 set "verbose=%~1"
 if "!verbose!"=="" set "verbose=n"
@@ -25,7 +35,9 @@ if !errorlevel! equ 0 set "fetch_error=true"
 
 :: Display the output to user (only in verbose mode)
 if /i "!verbose!"=="y" (
+    echo %GRAY%
     type temp_fetch_output.txt
+    echo %RESET%
 )
 
 :: Also append complete fetch output to log file
