@@ -9,6 +9,7 @@ set "RED=%ESC%[91m"
 set "GREEN=%ESC%[92m"
 set "YELLOW=%ESC%[93m"
 set "LIGHT_BLUE=%ESC%[94m"
+set "GRAY=%ESC%[90m"
 set "RESET=%ESC%[0m"
 
 :: Default variables 
@@ -161,7 +162,9 @@ for /f "usebackq delims=" %%R in ("%repo_file%") do (
         
         :: Display the output to user (only in verbose mode)
         if /i "!verbose!"=="y" (
+            echo %GRAY%
             type temp_output.txt
+            echo %RESET%
         )
         
         :: Also append complete git output to log file
@@ -222,10 +225,11 @@ for /f "usebackq delims=" %%R in ("%repo_file%") do (
     :: Optional custom command execution
     if /i "!docustomcommand!"=="y" (
         if /i "!verbose!"=="y" (
-            echo Running custom command: !customcommand!
+            echo.
+            echo %YELLOW%Running custom command:%RESET% !customcommand!
         )
-        echo %date% %time% - Running custom command: !customcommand! >> "%LOG_PATH%"
-        !customcommand!
+        :: Pass the custom command, current repository path, log file, and verbose mode to the custom command script
+        call "%~dp0customcommand.bat" "!customcommand!" "!currentPath!" "%AUTOPULL_LOGFILE%" "!verbose!"
     )
 
     if /i "!verbose!"=="y" (
