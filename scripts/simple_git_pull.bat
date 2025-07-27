@@ -224,7 +224,8 @@ for /f "usebackq delims=" %%R in ("%repo_file%") do (
         if /i "!verbose!"=="y" (
             echo Running custom command: !customcommand!
         )
-        call "%~dp0customcommand.bat" "!customcommand!"
+        :: Pass the current repository path and log file to the custom command script
+        call "%~dp0customcommand.bat" "!customcommand!" "!currentPath!" "%AUTOPULL_LOGFILE%"
     )
 
     if /i "!verbose!"=="y" (
