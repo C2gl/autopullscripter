@@ -28,7 +28,7 @@ if "!verbose!"=="" set "verbose=n"
 
 :: Check if a command was provided
 if "!custom_cmd!"=="" (
-    echo %RED%ERROR%RESET% ^| No custom command provided to execute.
+    echo %RED% ERROR %RESET% ^| No custom command provided to execute.
     if /i "!verbose!"=="y" (
         echo %YELLOW%VERBOSE%RESET% ^| Custom command script called without a command parameter.
     )
