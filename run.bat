@@ -5,6 +5,7 @@ echo  starting program
 echo ----------------------------------
 
 call scripts/log.bat
+call scripts/checkforupdates.bat
 call scripts/first_startup.bat
 
 echo Starting git pull process...
