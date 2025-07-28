@@ -89,6 +89,7 @@ In the (far) future, quite a few features are planned. This is not meant to be a
 - [X] Repository scanning functionality
 - [X] Smart error detection and handling
 - [X] Verbose mode for detailed output
+- [X] automated checking for available updates
 - [ ] An automated fetcher to see release changes when you didn't keep yourself up to date with the repo for a while
 - [ ] Sort repositories by category and choose what category to pull
 - [ ] The ability to have a cron job
