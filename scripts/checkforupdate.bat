@@ -4,6 +4,14 @@ setlocal enabledelayedexpansion
 :: GitHub Update Checker for AutoPullScripter
 :: This script checks if the current version matches the latest GitHub release
 
+:: Enable ANSI escape sequences for color support
+for /f %%a in ('echo prompt $E ^| cmd') do set "ESC=%%a"
+
+:: Color codes
+set "RED=%ESC%[91m"
+set "GREEN=%ESC%[92m"
+set "RESET=%ESC%[0m"
+
 :: Configuration
 set "GITHUB_REPO=C2gl/autopullscripter"
 set "CURRENT_VERSION=v0.3.1"
@@ -51,10 +59,10 @@ echo.
 :: Compare versions
 if "%CURRENT_VERSION%"=="%LATEST_VERSION%" (
     :: Green color for success message
-    echo [92m[+] You are running the latest version![0m
+    echo %GREEN%[+] You are running the latest version!%RESET%
 ) else (
     :: Red color for update available
-    echo [91m[!] Update available![0m
+    echo %RED%[!] Update available!%RESET%
     echo.
     echo Your version: %CURRENT_VERSION%
     echo Latest version: %LATEST_VERSION%
