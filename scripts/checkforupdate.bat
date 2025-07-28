@@ -50,9 +50,11 @@ echo.
 
 :: Compare versions
 if "%CURRENT_VERSION%"=="%LATEST_VERSION%" (
-    echo ✓ You are running the latest version!
+    :: Green color for success message
+    echo [92m[+] You are running the latest version![0m
 ) else (
-    echo ⚠ Update available!
+    :: Red color for update available
+    echo [91m[!] Update available![0m
     echo.
     echo Your version: %CURRENT_VERSION%
     echo Latest version: %LATEST_VERSION%
