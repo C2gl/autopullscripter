@@ -14,7 +14,7 @@ set "RESET=%ESC%[0m"
 
 :: Configuration
 set "GITHUB_REPO=C2gl/autopullscripter"
-set "CURRENT_VERSION=v0.3.1"
+set "CURRENT_VERSION=v0.4.0"
 set "TEMP_FILE=%temp%\github_latest_release.json"
 
 :: Set up logging path
@@ -68,12 +68,14 @@ echo.
 
 :: Compare versions
 if "%CURRENT_VERSION%"=="%LATEST_VERSION%" (
-    :: Green color for success message
-    echo %GREEN%[+] You are running the latest version!%RESET%
+    :: Success message with green color
+    echo.
+    echo %GREEN%[+] You are running the latest version^^!%RESET%
     echo %date% %time% - OK: Running latest version %CURRENT_VERSION% >> "%LOG_PATH%"
 ) else (
-    :: Red color for update available
-    echo %RED%[!] Update available!%RESET%
+    :: Update available message with red color
+    echo.
+    echo %RED%[^^!] Update available^^!%RESET%
     echo.
     echo Your version: %CURRENT_VERSION%
     echo Latest version: %LATEST_VERSION%
