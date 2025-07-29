@@ -80,8 +80,10 @@ echo Additional options:
 echo 1. Clone new repositories (add new remote repos)
 echo 2. Scan folder for existing repositories (add local repos)
 echo 3. Continue with current repos.txt
+echo 4. Pull repos from a different repos.txt file (will need to provide a different name)
+echo 5. Exit without any action
 echo.
-set /p "action_choice=What would you like to do? (1/2/3): "
+set /p "action_choice=What would you like to do? (1/2/3/4/5): "
 echo %date% %time% - User input: Action choice: !action_choice! >> "%LOG_PATH%"
 
 if "!action_choice!"=="1" (
@@ -90,6 +92,19 @@ if "!action_choice!"=="1" (
     call "%~dp0scan_repos.bat"
 ) else if "!action_choice!"=="3" (
     echo Continuing with current repos.txt...
+) else if "!action_choice!"=="4" (
+    set /p "new_repos_file=Enter the name of the new repos.txt file (with .txt extension): "
+    if exist "%~dp0..\%new_repos_file%" (
+        echo Using repos.txt file: %new_repos_file%
+        call "%~dp0simple_git_pull.bat" "%new_repos_file%"
+    ) else (
+        echo The specified repos.txt file does not exist. Please check the name and try again.
+        pause
+        exit
+    )
+) else if "!action_choice!"=="5" (
+    echo Exiting without any action.
+    exit
 ) else (
     echo Invalid choice. Continuing with current repos.txt...
 )

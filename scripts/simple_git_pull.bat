@@ -25,6 +25,15 @@ set "ERROR_COUNT=0"
 set "UPDATED_COUNT=0"
 set "verbose=n"
 
+:: Check if a custom repos file was provided as parameter
+if not "%~1"=="" (
+    set "repo_file=%~dp0..\%~1"
+    echo Using custom repos file: %~1
+) else (
+    set "repo_file=%~dp0..\repos.txt"
+    echo Using default repos file: repos.txt
+)
+
 :: Store the original script directory for logging
 set "SCRIPT_DIR=%~dp0.."
 set "LOG_PATH=%SCRIPT_DIR%\log\%AUTOPULL_LOGFILE%"
