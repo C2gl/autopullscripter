@@ -149,7 +149,9 @@ for /f "usebackq delims=" %%R in ("%repo_file%") do (
         set "has_changes=false"
         
         if !git_exit_code! neq 0 set "is_error=true"
-        findstr /i "error fatal denied permission authentication" temp_output.txt >nul 2>&1
+        
+        :: Only check for actual error messages, not words that might appear in branch names
+        findstr /i /c:"error:" /c:"fatal:" /c:"denied" /c:"permission denied" /c:"authentication failed" temp_output.txt >nul 2>&1
         if !errorlevel! equ 0 set "is_error=true"
         
         :: Check if already up to date
