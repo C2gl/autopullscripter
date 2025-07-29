@@ -96,7 +96,7 @@ if "!action_choice!"=="1" (
     set /p "new_repos_file=Enter the name of the new repos.txt file (with .txt extension): "
     if exist "%~dp0..\%new_repos_file%" (
         echo Using repos.txt file: %new_repos_file%
-        call "%~dp0pull_repos.bat" "%new_repos_file%"
+        call "%~dp0simple_git_pull.bat" "%new_repos_file%"
     ) else (
         echo The specified repos.txt file does not exist. Please check the name and try again.
         pause
