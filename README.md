@@ -1,5 +1,6 @@
 
 [![GitHub release](https://img.shields.io/github/release/c2gl/autopullscripter.svg)](https://github.com/c2gl/autopullscripter/releases)
+[![GitHub downloads](https://img.shields.io/github/downloads/c2gl/autopullscripter/total.svg)](https://github.com/c2gl/autopullscripter/releases)
 [![GitHub issues](https://img.shields.io/github/issues/c2gl/autopullscripter.svg)](https://github.com/c2gl/autopullscripter/issues)
 [![GitHub pull requests](https://img.shields.io/github/issues-pr/c2gl/autopullscripter.svg)](https://github.com/c2gl/autopullscripter/pulls)
 
