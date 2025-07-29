@@ -159,8 +159,12 @@ for /f "usebackq delims=" %%R in ("%repo_file%") do (
         if !errorlevel! equ 0 set "is_up_to_date=true"
         
         :: Check if changes were pulled (common indicators)
-        findstr /i "fast-forward updating" temp_output.txt >nul 2>&1
+        findstr /i "fast-forward" temp_output.txt >nul 2>&1
         if !errorlevel! equ 0 set "has_changes=true"
+        if "!has_changes!"=="false" (
+            findstr /i "updating" temp_output.txt >nul 2>&1
+            if !errorlevel! equ 0 set "has_changes=true"
+        )
         if "!has_changes!"=="false" (
             findstr /i "files changed" temp_output.txt >nul 2>&1
             if !errorlevel! equ 0 set "has_changes=true"
