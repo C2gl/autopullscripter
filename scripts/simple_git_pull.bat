@@ -163,29 +163,50 @@ for /f "usebackq delims=" %%R in ("%repo_file%") do (
         findstr /i /c:"error:" /c:"fatal:" /c:"denied" /c:"permission denied" /c:"authentication failed" temp_output.txt >nul 2>&1
         if !errorlevel! equ 0 set "is_error=true"
         
-        :: Check if already up to date
-        findstr /i "already up" temp_output.txt | findstr /i "to date" >nul 2>&1
-        if !errorlevel! equ 0 set "is_up_to_date=true"
-        
-        :: Check if changes were pulled (common indicators)
+        :: Check if changes were pulled - prioritize this check before "already up to date"
+        :: This fixes false negatives when git shows both remote updates AND "already up to date"
         findstr /i "fast-forward" temp_output.txt >nul 2>&1
         if !errorlevel! equ 0 set "has_changes=true"
+        
         if "!has_changes!"=="false" (
             findstr /i "updating" temp_output.txt >nul 2>&1
             if !errorlevel! equ 0 set "has_changes=true"
         )
+        
         if "!has_changes!"=="false" (
             findstr /i "files changed" temp_output.txt >nul 2>&1
             if !errorlevel! equ 0 set "has_changes=true"
         )
+        
         if "!has_changes!"=="false" (
             findstr /i "insertions" temp_output.txt >nul 2>&1
             if !errorlevel! equ 0 set "has_changes=true"
         )
+        
         if "!has_changes!"=="false" (
             findstr /i "deletions" temp_output.txt >nul 2>&1
             if !errorlevel! equ 0 set "has_changes=true"
         )
+        
+        :: Additional change detection patterns for better accuracy
+        if "!has_changes!"=="false" (
+            findstr /i "merge" temp_output.txt >nul 2>&1
+            if !errorlevel! equ 0 set "has_changes=true"
+        )
+        
+        if "!has_changes!"=="false" (
+            findstr /i "create mode" temp_output.txt >nul 2>&1
+            if !errorlevel! equ 0 set "has_changes=true"
+        )
+        
+        if "!has_changes!"=="false" (
+            findstr /i "delete mode" temp_output.txt >nul 2>&1
+            if !errorlevel! equ 0 set "has_changes=true"
+        )
+        
+        :: Check if already up to date (only after checking for changes)
+        findstr /i "already up" temp_output.txt | findstr /i "to date" >nul 2>&1
+        if !errorlevel! equ 0 set "is_up_to_date=true"
         
         :: Display the output to user (only in verbose mode)
         if /i "!verbose!"=="y" (
@@ -206,17 +227,8 @@ for /f "usebackq delims=" %%R in ("%repo_file%") do (
                 echo %RED%ERROR%RESET%
             )
             echo %date% %time% - ERROR ^| Git pull failed for !currentPath! - Exit code: !git_exit_code! >> "%LOG_PATH%"
-        ) else if "!is_up_to_date!"=="true" (
-            :: Already up to date
-            set /a SUCCESS_COUNT+=1
-            if /i "!verbose!"=="y" (
-                echo %YELLOW%OK - ALREADY UP TO DATE%RESET% ^| No changes for !currentPath!
-            ) else (
-                echo %YELLOW%OK - ALREADY UP TO DATE%RESET%
-            )
-            echo %date% %time% - OK - ALREADY UP TO DATE ^| No changes for !currentPath! >> "%LOG_PATH%"
         ) else if "!has_changes!"=="true" (
-            :: Changes were pulled
+            :: Changes were pulled - prioritize this over "already up to date"
             set /a SUCCESS_COUNT+=1
             set /a UPDATED_COUNT+=1
             if /i "!verbose!"=="y" (
@@ -225,6 +237,15 @@ for /f "usebackq delims=" %%R in ("%repo_file%") do (
                 echo %GREEN%OK - PULLED NEW CHANGES%RESET%
             )
             echo %date% %time% - OK - PULLED NEW CHANGES ^| Changes pulled for !currentPath! >> "%LOG_PATH%"
+        ) else if "!is_up_to_date!"=="true" (
+            :: Already up to date (only if no changes detected)
+            set /a SUCCESS_COUNT+=1
+            if /i "!verbose!"=="y" (
+                echo %YELLOW%OK - ALREADY UP TO DATE%RESET% ^| No changes for !currentPath!
+            ) else (
+                echo %YELLOW%OK - ALREADY UP TO DATE%RESET%
+            )
+            echo %date% %time% - OK - ALREADY UP TO DATE ^| No changes for !currentPath! >> "%LOG_PATH%"
         ) else (
             :: Generic success (fallback)
             set /a SUCCESS_COUNT+=1
