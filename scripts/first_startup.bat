@@ -1,5 +1,15 @@
 :: first_startup.bat
-:: this fie is called by run.bat and will go back to it when done running 
+:: this fie is called by run.bat and will go back to i# prompting user if they want to clone new repositories or scan for existing ones
+echo.
+echo Additional options:
+echo 1. Clone new repositories (add new remote repos)
+echo 2. Scan folder for existing repositories (add local repos)
+echo 3. Continue with current repos.txt
+echo 4. Pull repos from a different repos.txt file (will need to provide a different name)
+echo 5. Use ENHANCED CATEGORY MODE (organize repos by categories)
+echo 6. Exit without any action
+echo.
+set /p "action_choice=What would you like to do? (1/2/3/4/5/6): "e running 
 @echo off
 
 setlocal enabledelayedexpansion
@@ -94,15 +104,43 @@ if "!action_choice!"=="1" (
     echo Continuing with current repos.txt...
 ) else if "!action_choice!"=="4" (
     set /p "new_repos_file=Enter the name of the new repos.txt file (with .txt extension): "
-    if exist "%~dp0..\%new_repos_file%" (
-        echo Using repos.txt file: %new_repos_file%
-        call "%~dp0simple_git_pull.bat" "%new_repos_file%"
+    if exist "%~dp0..\!new_repos_file!" (
+        echo Using repos.txt file: !new_repos_file!
+        call "%~dp0simple_git_pull.bat" "!new_repos_file!"
     ) else (
         echo The specified repos.txt file does not exist. Please check the name and try again.
         pause
         exit
     )
 ) else if "!action_choice!"=="5" (
+    echo Starting ENHANCED CATEGORY MODE...
+    echo.
+    :: Check if category file exists, if not offer to create it
+    if not exist "%~dp0..\repos_with_categories.txt" (
+        echo Category file not found. Would you like to:
+        echo 1. Use the migration tool to create it from your current repos.txt
+        echo 2. Skip and use regular mode
+        echo.
+        set /p "migrate_choice=Choose option (1/2): "
+        if "!migrate_choice!"=="1" (
+            echo Running migration tool...
+            call "%~dp0migrate_to_categories.bat"
+            echo.
+            echo Migration completed. Please review the generated file and rename it to repos_with_categories.txt
+            echo Then run the script again to use category mode.
+            pause
+            exit
+        ) else (
+            echo Continuing with regular mode...
+        )
+    ) else (
+        echo Category file found! Starting enhanced mode...
+        :: Create flag to skip regular pull in run.bat
+        echo. > "%~dp0enhanced_mode_used.tmp"
+        call "%~dp0simple_git_pull_enhanced.bat"
+        exit
+    )
+) else if "!action_choice!"=="6" (
     echo Exiting without any action.
     exit
 ) else (
