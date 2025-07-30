@@ -11,30 +11,18 @@ call scripts/first_startup.bat
 echo Starting git pull process...
 echo %date% %time% - Starting git pull process. >> "log\%AUTOPULL_LOGFILE%"
 
-:: Check which mode was selected
-if exist "scripts\mode_selection.tmp" (
-    set /p mode_choice=<"scripts\mode_selection.tmp"
-    del "scripts\mode_selection.tmp" >nul 2>&1
-    
-    if "!mode_choice!"=="enhanced" (
-        echo Running ENHANCED CATEGORY MODE...
-        call scripts/simple_git_pull_enhanced.bat repos_enhanced.txt
-    ) else (
-        :: Check for custom file
-        if exist "scripts\custom_file.tmp" (
-            set /p custom_file=<"scripts\custom_file.tmp"
-            del "scripts\custom_file.tmp" >nul 2>&1
-            for /f "tokens=2 delims=:" %%a in ("!custom_file!") do set "filename=%%a"
-            echo Running with custom file: !filename!
-            call scripts/simple_git_pull.bat "!filename!"
-        ) else (
-            echo Running NORMAL MODE...
-            call scripts/simple_git_pull.bat
-        )
-    )
+:: Check which mode was selected using simple file existence
+if exist "scripts\use_enhanced_mode.flag" (
+    echo Running ENHANCED CATEGORY MODE...
+    del "scripts\use_enhanced_mode.flag" >nul 2>&1
+    call scripts/simple_git_pull_enhanced.bat repos_enhanced.txt
+) else if exist "scripts\use_custom_file.flag" (
+    set /p custom_filename=<"scripts\use_custom_file.flag"
+    del "scripts\use_custom_file.flag" >nul 2>&1
+    echo Running with custom file: !custom_filename!
+    call scripts/simple_git_pull.bat "!custom_filename!"
 ) else (
-    :: Fallback to normal mode
-    echo Running NORMAL MODE (fallback)...
+    echo Running NORMAL MODE...
     call scripts/simple_git_pull.bat
 )
 

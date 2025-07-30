@@ -54,10 +54,43 @@ if exist "%repo_file%" (
     :: Let user select categories
     call :select_categories
 ) else (
-    echo %RED%ERROR: repos_enhanced.txt not found!%RESET%
-    echo This should have been created automatically. Please check the migration process.
-    pause
-    exit /b 1
+    echo %YELLOW%repos_enhanced.txt not found!%RESET%
+    echo.
+    echo This file contains your repositories organized by categories.
+    echo Would you like to create it now from your existing repos.txt?
+    echo.
+    set /p "create_enhanced=Create repos_enhanced.txt? (y/n): "
+    
+    if /i "!create_enhanced!"=="y" (
+        if exist "%~dp0..\repos.txt" (
+            echo Creating repos_enhanced.txt from repos.txt...
+            
+            :: Simple copy with categories for now
+            echo # Repository Categories Configuration > "%~dp0..\repos_enhanced.txt"
+            echo # Auto-generated from repos.txt >> "%~dp0..\repos_enhanced.txt"
+            echo # Format: [CATEGORY_NAME] followed by repository paths >> "%~dp0..\repos_enhanced.txt"
+            echo. >> "%~dp0..\repos_enhanced.txt"
+            echo [ALL_REPOSITORIES] >> "%~dp0..\repos_enhanced.txt"
+            type "%~dp0..\repos.txt" >> "%~dp0..\repos_enhanced.txt"
+            
+            echo repos_enhanced.txt created successfully!
+            echo You can edit this file later to organize repositories into proper categories.
+            echo.
+            set "repo_file=%~dp0..\repos_enhanced.txt"
+            set "category_mode=y"
+            set "selected_categories=ALL_REPOSITORIES"
+        ) else (
+            echo %RED%ERROR: repos.txt not found. Cannot create repos_enhanced.txt.%RESET%
+            echo Please ensure repos.txt exists first.
+            pause
+            exit /b 1
+        )
+    ) else (
+        echo %RED%Cannot proceed without repos_enhanced.txt.%RESET%
+        echo Please create this file or choose normal mode instead.
+        pause
+        exit /b 1
+    )
 )
 
 :: Count total repositories based on file type
