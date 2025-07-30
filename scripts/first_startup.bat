@@ -13,10 +13,10 @@ set "LOG_PATH=%SCRIPT_DIR%\log\%AUTOPULL_LOGFILE%"
 if EXIST "%~dp0..\repos.txt" (
     echo repos.txt found.
     echo %date% %time% - repos.txt found. >> "%LOG_PATH%"
-) 
-if EXIST "%~dp0..\repos_enhanced.txt" (
-    echo repos_enhanced.txt found.
-    echo %date% %time% - repos_enhanced.txt found. >> "%LOG_PATH%"
+    if EXIST "%~dp0..\repos_enhanced.txt" (
+        echo repos_enhanced.txt also found.
+        echo %date% %time% - repos_enhanced.txt found. >> "%LOG_PATH%"
+    )
 ) ELSE (
     echo repos.txt NOT found.
     :: Store the original script directory for logging
@@ -95,17 +95,23 @@ echo %date% %time% - User input: Action choice: !action_choice! >> "%LOG_PATH%"
 
 if "!action_choice!"=="1" (
     echo Continuing with NORMAL MODE using repos.txt...
+    echo %date% %time% - DEBUG: About to call simple_git_pull.bat >> "%LOG_PATH%"
+    echo %date% %time% - DEBUG: Full path: %~dp0simple_git_pull.bat >> "%LOG_PATH%"
     call "%~dp0simple_git_pull.bat"
+    echo %date% %time% - DEBUG: Call completed with errorlevel: !errorlevel! >> "%LOG_PATH%"
     echo Normal mode completed.
     pause
-    exit
+    goto :eof
 ) else if "!action_choice!"=="2" (
     echo Starting ENHANCED CATEGORY MODE...
     echo Calling enhanced script directly...
+    echo %date% %time% - DEBUG: About to call simple_git_pull_enhanced.bat >> "%LOG_PATH%"
+    echo %date% %time% - DEBUG: Full path: %~dp0simple_git_pull_enhanced.bat >> "%LOG_PATH%"
     call "%~dp0simple_git_pull_enhanced.bat"
+    echo %date% %time% - DEBUG: Call completed with errorlevel: !errorlevel! >> "%LOG_PATH%"
     echo Enhanced mode completed.
     pause
-    exit
+    goto :eof
 ) else if "!action_choice!"=="3" (
     call "%~dp0clone_repo.bat"
 ) else if "!action_choice!"=="4" (
@@ -117,7 +123,7 @@ if "!action_choice!"=="1" (
         call "%~dp0simple_git_pull.bat" "!new_repos_file!"
         echo Custom file mode completed.
         pause
-        exit
+        goto :eof
     ) else (
         echo The specified repos.txt file does not exist. Please check the name and try again.
         pause
@@ -131,5 +137,5 @@ if "!action_choice!"=="1" (
     call "%~dp0simple_git_pull.bat"
     echo Normal mode completed (fallback).
     pause
-    exit
+    goto :eof
 )
