@@ -13,6 +13,10 @@ set "LOG_PATH=%SCRIPT_DIR%\log\%AUTOPULL_LOGFILE%"
 if EXIST "%~dp0..\repos.txt" (
     echo repos.txt found.
     echo %date% %time% - repos.txt found. >> "%LOG_PATH%"
+) 
+if EXIST "%~dp0..\repos_enhanced.txt" (
+    echo repos_enhanced.txt found.
+    echo %date% %time% - repos_enhanced.txt found. >> "%LOG_PATH%"
 ) ELSE (
     echo repos.txt NOT found.
     :: Store the original script directory for logging
