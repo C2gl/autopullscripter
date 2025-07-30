@@ -88,14 +88,17 @@ set "LOG_PATH=%SCRIPT_DIR%\log\%AUTOPULL_LOGFILE%"
 
 :: prompting user if they want to clone new repositories or scan for existing ones
 echo.
-echo Additional options:
-echo 1. Clone new repositories (add new remote repos)
-echo 2. Scan folder for existing repositories (add local repos)
-echo 3. Continue with current repos.txt
-echo 4. Pull repos from a different repos.txt file (will need to provide a different name)
-echo 5. Exit without any action
+echo Choose execution mode:
+echo 1. NORMAL MODE - Use standard repos.txt file
+echo 2. ENHANCED CATEGORY MODE - Use categorized repositories
 echo.
-set /p "action_choice=What would you like to do? (1/2/3/4/5): "
+echo Additional options:
+echo 3. Clone new repositories (add new remote repos)
+echo 4. Scan folder for existing repositories (add local repos)
+echo 5. Pull repos from a different repos.txt file (will need to provide a different name)
+echo 6. Exit without any action
+echo.
+set /p "action_choice=What would you like to do? (1/2/3/4/5/6): "
 echo %date% %time% - User input: Action choice: !action_choice! >> "%LOG_PATH%"
 
 if "!action_choice!"=="1" (
