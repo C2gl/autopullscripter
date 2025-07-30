@@ -103,18 +103,17 @@ echo %date% %time% - User input: Action choice: !action_choice! >> "%LOG_PATH%"
 
 if "!action_choice!"=="1" (
     echo Continuing with NORMAL MODE using repos.txt...
-    :: Clean up any existing flags to ensure normal mode
-    if exist "%~dp0use_enhanced_mode.flag" del "%~dp0use_enhanced_mode.flag" >nul 2>&1
-    if exist "%~dp0use_custom_file.flag" del "%~dp0use_custom_file.flag" >nul 2>&1
-    echo Normal mode selected. Returning to main process...
-    goto :eof
+    call "%~dp0simple_git_pull.bat"
+    echo Normal mode completed.
+    pause
+    exit
 ) else if "!action_choice!"=="2" (
     echo Starting ENHANCED CATEGORY MODE...
-    :: Create simple flag to use enhanced mode
-    echo enhanced > "%~dp0use_enhanced_mode.flag"
-    echo Enhanced mode selected. The enhanced script will handle setup automatically.
-    echo Returning to main process...
-    goto :eof
+    echo Calling enhanced script directly...
+    call "%~dp0simple_git_pull_enhanced.bat"
+    echo Enhanced mode completed.
+    pause
+    exit
 ) else if "!action_choice!"=="3" (
     call "%~dp0clone_repo.bat"
 ) else if "!action_choice!"=="4" (
@@ -123,9 +122,10 @@ if "!action_choice!"=="1" (
     set /p "new_repos_file=Enter the name of the new repos.txt file (with .txt extension): "
     if exist "%~dp0..\!new_repos_file!" (
         echo Using repos.txt file: !new_repos_file!
-        echo !new_repos_file! > "%~dp0use_custom_file.flag"
-        echo Custom file mode selected. Returning to main process...
-        goto :eof
+        call "%~dp0simple_git_pull.bat" "!new_repos_file!"
+        echo Custom file mode completed.
+        pause
+        exit
     ) else (
         echo The specified repos.txt file does not exist. Please check the name and try again.
         pause
@@ -136,9 +136,8 @@ if "!action_choice!"=="1" (
     exit
 ) else (
     echo Invalid choice. Using NORMAL MODE...
-    :: Clean up any existing flags to ensure normal mode
-    if exist "%~dp0use_enhanced_mode.flag" del "%~dp0use_enhanced_mode.flag" >nul 2>&1
-    if exist "%~dp0use_custom_file.flag" del "%~dp0use_custom_file.flag" >nul 2>&1
-    echo Normal mode selected (fallback). Returning to main process...
-    goto :eof
+    call "%~dp0simple_git_pull.bat"
+    echo Normal mode completed (fallback).
+    pause
+    exit
 )
