@@ -16,7 +16,7 @@ set "RESET=%ESC%[0m"
 
 :: Default variables 
 set "waittime=1"
-set "repo_file=repos.txt"
+set "repo_file=repos_enhanced.txt"
 set "count=0"
 set "toFetch=n"
 set "docustomcommand=n"
@@ -28,15 +28,15 @@ set "UPDATED_COUNT=0"
 set "verbose=n"
 set "use_categories=n"
 set "selected_categories="
-set "category_mode=n"
+set "category_mode=y"
 
 :: Check if a custom repos file was provided as parameter
 if not "%~1"=="" (
     set "repo_file=%~dp0..\%~1"
     echo Using custom repos file: %~1
 ) else (
-    set "repo_file=%~dp0..\repos.txt"
-    echo Using default repos file: repos.txt
+    set "repo_file=%~dp0..\repos_enhanced.txt"
+    echo Using enhanced repos file: repos_enhanced.txt
 )
 
 :: Store the original script directory for logging
@@ -44,24 +44,20 @@ set "SCRIPT_DIR=%~dp0.."
 set "LOG_PATH=%SCRIPT_DIR%\log\%AUTOPULL_LOGFILE%"
 
 :: Check if we have a categorized repos file
-if exist "%~dp0..\repos_with_categories.txt" (
-    echo.
-    echo %CYAN%Enhanced category mode available!%RESET%
-    set /p "use_categories=Do you want to use category-based selection? (y/n, default is n): "
+if exist "%repo_file%" (
+    echo %CYAN%Category mode: repos_enhanced.txt found!%RESET%
+    set "category_mode=y"
     
-    if "!use_categories!"=="" set "use_categories=n"
+    :: Show available categories
+    call :show_available_categories
     
-    if /i "!use_categories!"=="y" (
-        set "repo_file=%~dp0..\repos_with_categories.txt"
-        set "category_mode=y"
-        echo Using categorized repos file: repos_with_categories.txt
-        
-        :: Show available categories
-        call :show_available_categories
-        
-        :: Let user select categories
-        call :select_categories
-    )
+    :: Let user select categories
+    call :select_categories
+) else (
+    echo %RED%ERROR: repos_enhanced.txt not found!%RESET%
+    echo This should have been created automatically. Please check the migration process.
+    pause
+    exit /b 1
 )
 
 :: Count total repositories based on file type

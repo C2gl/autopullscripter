@@ -17,8 +17,18 @@ echo This tool helps you migrate from repos.txt to the new categorized format.
 echo It will analyze your current repos.txt and suggest categories based on folder names.
 echo.
 
-set "input_file=%~dp0..\repos.txt"
-set "output_file=%~dp0..\repos_categorized_auto.txt"
+:: Check for command line parameters
+if not "%~1"=="" (
+    set "input_file=%~1"
+) else (
+    set "input_file=%~dp0..\repos.txt"
+)
+
+if not "%~2"=="" (
+    set "output_file=%~2"
+) else (
+    set "output_file=%~dp0..\repos_categorized_auto.txt"
+)
 
 if not exist "%input_file%" (
     echo %YELLOW%Warning:%RESET% repos.txt not found in the expected location.

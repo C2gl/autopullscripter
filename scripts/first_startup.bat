@@ -1,12 +1,14 @@
 :: first_startup.bat
 :: this fie is called by run.bat and will go back to i# prompting user if they want to clone new repositories or scan for existing ones
 echo.
+echo Choose execution mode:
+echo 1. NORMAL MODE - Use standard repos.txt file
+echo 2. ENHANCED CATEGORY MODE - Use categorized repositories
+echo.
 echo Additional options:
-echo 1. Clone new repositories (add new remote repos)
-echo 2. Scan folder for existing repositories (add local repos)
-echo 3. Continue with current repos.txt
-echo 4. Pull repos from a different repos.txt file (will need to provide a different name)
-echo 5. Use ENHANCED CATEGORY MODE (organize repos by categories)
+echo 3. Clone new repositories (add new remote repos)
+echo 4. Scan folder for existing repositories (add local repos)
+echo 5. Pull repos from a different repos.txt file (will need to provide a different name)
 echo 6. Exit without any action
 echo.
 set /p "action_choice=What would you like to do? (1/2/3/4/5/6): "e running 
@@ -97,52 +99,48 @@ set /p "action_choice=What would you like to do? (1/2/3/4/5): "
 echo %date% %time% - User input: Action choice: !action_choice! >> "%LOG_PATH%"
 
 if "!action_choice!"=="1" (
-    call "%~dp0clone_repo.bat"
+    echo Continuing with NORMAL MODE using repos.txt...
+    :: Set flag to use normal mode
+    echo normal > "%~dp0mode_selection.tmp"
 ) else if "!action_choice!"=="2" (
-    call "%~dp0scan_repos.bat"
+    echo Starting ENHANCED CATEGORY MODE...
+    :: Set flag to use enhanced mode
+    echo enhanced > "%~dp0mode_selection.tmp"
+    
+    :: Check if repos_enhanced.txt exists, if not create it from repos.txt
+    if not exist "%~dp0..\repos_enhanced.txt" (
+        echo repos_enhanced.txt not found. Creating from repos.txt...
+        if exist "%~dp0..\repos.txt" (
+            echo Running migration tool to create repos_enhanced.txt...
+            call "%~dp0migrate_to_categories.bat" "%~dp0..\repos.txt" "%~dp0..\repos_enhanced.txt"
+            echo Migration completed! repos_enhanced.txt created.
+        ) else (
+            echo ERROR: repos.txt not found. Cannot create repos_enhanced.txt.
+            pause
+            exit
+        )
+    ) else (
+        echo repos_enhanced.txt found. Using existing categorized repositories.
+    )
 ) else if "!action_choice!"=="3" (
-    echo Continuing with current repos.txt...
+    call "%~dp0clone_repo.bat"
 ) else if "!action_choice!"=="4" (
+    call "%~dp0scan_repos.bat"
+) else if "!action_choice!"=="5" (
     set /p "new_repos_file=Enter the name of the new repos.txt file (with .txt extension): "
     if exist "%~dp0..\!new_repos_file!" (
         echo Using repos.txt file: !new_repos_file!
-        call "%~dp0simple_git_pull.bat" "!new_repos_file!"
+        echo normal > "%~dp0mode_selection.tmp"
+        echo custom:!new_repos_file! > "%~dp0custom_file.tmp"
     ) else (
         echo The specified repos.txt file does not exist. Please check the name and try again.
         pause
-        exit
-    )
-) else if "!action_choice!"=="5" (
-    echo Starting ENHANCED CATEGORY MODE...
-    echo.
-    :: Check if category file exists, if not offer to create it
-    if not exist "%~dp0..\repos_with_categories.txt" (
-        echo Category file not found. Would you like to:
-        echo 1. Use the migration tool to create it from your current repos.txt
-        echo 2. Skip and use regular mode
-        echo.
-        set /p "migrate_choice=Choose option (1/2): "
-        if "!migrate_choice!"=="1" (
-            echo Running migration tool...
-            call "%~dp0migrate_to_categories.bat"
-            echo.
-            echo Migration completed. Please review the generated file and rename it to repos_with_categories.txt
-            echo Then run the script again to use category mode.
-            pause
-            exit
-        ) else (
-            echo Continuing with regular mode...
-        )
-    ) else (
-        echo Category file found! Starting enhanced mode...
-        :: Create flag to skip regular pull in run.bat
-        echo. > "%~dp0enhanced_mode_used.tmp"
-        call "%~dp0simple_git_pull_enhanced.bat"
         exit
     )
 ) else if "!action_choice!"=="6" (
     echo Exiting without any action.
     exit
 ) else (
-    echo Invalid choice. Continuing with current repos.txt...
+    echo Invalid choice. Using NORMAL MODE...
+    echo normal > "%~dp0mode_selection.tmp"
 )
