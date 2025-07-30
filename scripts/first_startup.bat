@@ -106,11 +106,15 @@ if "!action_choice!"=="1" (
     :: Clean up any existing flags to ensure normal mode
     if exist "%~dp0use_enhanced_mode.flag" del "%~dp0use_enhanced_mode.flag" >nul 2>&1
     if exist "%~dp0use_custom_file.flag" del "%~dp0use_custom_file.flag" >nul 2>&1
+    echo Normal mode selected. Returning to main process...
+    goto :eof
 ) else if "!action_choice!"=="2" (
     echo Starting ENHANCED CATEGORY MODE...
     :: Create simple flag to use enhanced mode
     echo enhanced > "%~dp0use_enhanced_mode.flag"
     echo Enhanced mode selected. The enhanced script will handle setup automatically.
+    echo Returning to main process...
+    goto :eof
 ) else if "!action_choice!"=="3" (
     call "%~dp0clone_repo.bat"
 ) else if "!action_choice!"=="4" (
@@ -120,6 +124,8 @@ if "!action_choice!"=="1" (
     if exist "%~dp0..\!new_repos_file!" (
         echo Using repos.txt file: !new_repos_file!
         echo !new_repos_file! > "%~dp0use_custom_file.flag"
+        echo Custom file mode selected. Returning to main process...
+        goto :eof
     ) else (
         echo The specified repos.txt file does not exist. Please check the name and try again.
         pause
@@ -133,4 +139,6 @@ if "!action_choice!"=="1" (
     :: Clean up any existing flags to ensure normal mode
     if exist "%~dp0use_enhanced_mode.flag" del "%~dp0use_enhanced_mode.flag" >nul 2>&1
     if exist "%~dp0use_custom_file.flag" del "%~dp0use_custom_file.flag" >nul 2>&1
+    echo Normal mode selected (fallback). Returning to main process...
+    goto :eof
 )
