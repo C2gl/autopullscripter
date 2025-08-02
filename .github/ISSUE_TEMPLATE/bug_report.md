@@ -26,11 +26,18 @@ If applicable, add screenshots to help explain your problem.
  - OS: [e.g. Windows, macOS]
  - Version [e.g. 22]
 
+**Log Files**
+Please attach relevant log files to help us diagnose the issue:
+- Upload any `.log` files from your `log/` directory
+- Include error output or debug information
+- Drag and drop files here or use the "Attach files" option below
+
 **Additional context**
 Add any other context about the problem here.
 
-**checklist**
-- [ ] described the issue 
-- [ ] gave my current setup 
-- [ ] uploaded my log file
-- [ ] uploaded my repos.txt or repos_enhanced.txt
+**Checklist**
+- [ ] I have described the issue clearly
+- [ ] I have provided my current setup information
+- [ ] I have uploaded my log file(s) from the `log/` directory
+- [ ] I have uploaded my `repos.txt` or `repos_enhanced.txt` file
+- [ ] I have checked that this issue doesn't already exist
