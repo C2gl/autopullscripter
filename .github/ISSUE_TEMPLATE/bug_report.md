@@ -28,3 +28,9 @@ If applicable, add screenshots to help explain your problem.
 
 **Additional context**
 Add any other context about the problem here.
+
+**checklist**
+- [ ] described the issue 
+- [ ] gave my current setup 
+- [ ] uploaded my log file
+- [ ] uploaded my repos.txt or repos_enhanced.txt
