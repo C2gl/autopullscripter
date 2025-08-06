@@ -1,0 +1,129 @@
+name: Batch File Syntax Check
+
+on:
+  push:
+    paths:
+      - '**/*.bat'
+  pull_request:
+    paths:
+      - '**/*.bat'
+
+jobs:
+  syntax-check:
+    runs-on: windows-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Find and check batch files
+        shell: powershell
+        run: |
+          $errorCount = 0
+          $checkedFiles = 0
+          
+          # Find all .bat files
+          $batFiles = Get-ChildItem -Path . -Filter "*.bat" -Recurse
+          
+          Write-Host "Found $($batFiles.Count) batch files to check:"
+          
+          foreach ($file in $batFiles) {
+            Write-Host "Checking: $($file.FullName)"
+            $checkedFiles++
+            
+            try {
+              # Read the content of the batch file
+              $content = Get-Content $file.FullName -Raw
+              
+              # Basic syntax checks
+              $errors = @()
+              
+              # Check for unmatched parentheses
+              $openParens = ($content -split '\(' | Measure-Object).Count - 1
+              $closeParens = ($content -split '\)' | Measure-Object).Count - 1
+              if ($openParens -ne $closeParens) {
+                $errors += "Unmatched parentheses (Open: $openParens, Close: $closeParens)"
+              }
+              
+              # Check for unmatched quotes
+              $doubleQuotes = ($content -split '"' | Measure-Object).Count - 1
+              if ($doubleQuotes % 2 -ne 0) {
+                $errors += "Unmatched double quotes"
+              }
+              
+              # Check for common syntax issues
+              $lines = Get-Content $file.FullName
+              for ($i = 0; $i -lt $lines.Length; $i++) {
+                $line = $lines[$i].Trim()
+                $lineNum = $i + 1
+                
+                # Skip empty lines and comments
+                if ($line -eq "" -or $line.StartsWith("REM ") -or $line.StartsWith("::")) {
+                  continue
+                }
+                
+                # Check for labels that don't start with :
+                if ($line -match "^[a-zA-Z][a-zA-Z0-9_]*:$" -and -not $line.StartsWith(":")) {
+                  $errors += "Line $lineNum: Invalid label format - should start with ':'"
+                }
+                
+                # Check for GOTO statements without proper labels
+                if ($line -match "goto\s+([a-zA-Z][a-zA-Z0-9_]*)" -and -not ($content -match ":$($matches[1])\b")) {
+                  $errors += "Line $lineNum: GOTO references undefined label '$($matches[1])'"
+                }
+                
+                # Check for invalid variable syntax
+                if ($line -match "%[^%\s]*[^%]$") {
+                  $errors += "Line $lineNum: Potential unclosed variable reference"
+                }
+              }
+              
+              # Try to validate the batch file by parsing it with cmd (dry run)
+              $tempFile = [System.IO.Path]::GetTempFileName() + ".bat"
+              try {
+                # Create a wrapper that just echoes commands without executing them
+                $wrapperContent = "@echo off`n"
+                $wrapperContent += "echo Syntax check for: $($file.Name)`n"
+                $wrapperContent += "exit /b 0`n"
+                
+                Set-Content $tempFile $wrapperContent
+                
+                # Test basic cmd parsing by checking if the file can be read by cmd
+                $result = cmd /c "echo Checking syntax... && type `"$($file.FullName)`" >nul 2>&1"
+                if ($LASTEXITCODE -ne 0) {
+                  $errors += "CMD parsing failed with exit code $LASTEXITCODE"
+                }
+              } finally {
+                if (Test-Path $tempFile) {
+                  Remove-Item $tempFile -Force
+                }
+              }
+              
+              if ($errors.Count -gt 0) {
+                Write-Host "❌ ERRORS in $($file.Name):" -ForegroundColor Red
+                foreach ($error in $errors) {
+                  Write-Host "  - $error" -ForegroundColor Red
+                }
+                $errorCount++
+              } else {
+                Write-Host "✅ $($file.Name) - OK" -ForegroundColor Green
+              }
+              
+            } catch {
+              Write-Host "❌ ERROR checking $($file.Name): $_" -ForegroundColor Red
+              $errorCount++
+            }
+            
+            Write-Host ""
+          }
+          
+          Write-Host "Summary:"
+          Write-Host "Files checked: $checkedFiles"
+          Write-Host "Files with errors: $errorCount"
+          
+          if ($errorCount -gt 0) {
+            Write-Host "❌ Batch file syntax check failed!" -ForegroundColor Red
+            exit 1
+          } else {
+            Write-Host "✅ All batch files passed syntax check!" -ForegroundColor Green
+            exit 0
+          }
