@@ -35,7 +35,7 @@ echo Directory does not exist. Creating directory...
 echo Creating directory: !path!\!repo_name!
 mkdir "!repo_name!"
 echo Directory created: !path!\!repo_name!
-cd /d "!path!
+cd /d "!path!\!repo_name!"
 echo Initializing git repository...
 
 REM Add Git to PATH for this script session
