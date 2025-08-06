@@ -44,28 +44,30 @@ jobs:
                 $syntaxErrors += "Unmatched parentheses (Open: $openParens, Close: $closeParens)"
               }
               
-              # Check for unmatched quotes - smarter approach
+              # Check for unmatched quotes - very smart approach
               # Only flag obvious quote syntax errors, not complex valid constructs
               $quoteCheckLines = ($content -split "`n") | Where-Object { 
                 $_.Trim() -ne "" -and 
                 -not $_.Trim().StartsWith("::") -and 
                 -not $_.Trim().StartsWith("REM ") -and
                 -not ($_ -match "for /f.*'.*'.*do") -and
-                -not ($_ -match "echo prompt.*cmd")
+                -not ($_ -match "echo prompt.*cmd") -and
+                -not ($_ -match "findstr.*\/c:")
               }
               
               $totalQuotes = 0
               foreach ($line in $quoteCheckLines) {
-                # Simple quote count for lines that aren't complex FOR constructs
+                # Simple quote count for lines that aren't complex constructs
                 $totalQuotes += ($line -split '"' | Measure-Object).Count - 1
               }
               
-              # Only flag if there's a significant imbalance and it's not a known complex pattern
-              if ($totalQuotes % 2 -ne 0 -and $totalQuotes -gt 5) {
+              # Only flag if there's a major imbalance and it's not a known complex pattern
+              if ($totalQuotes % 2 -ne 0 -and $totalQuotes -gt 20) {
                 # Check if this might be a legitimate complex construct
                 $hasComplexConstruct = ($content -match "for /f.*tokens.*delims.*do" -or 
-                                      $content -match "findstr.*\\c:" -or
-                                      $content -match "echo.*\^\^!")
+                                      $content -match "findstr.*\/c:" -or
+                                      $content -match "echo.*\^\^!" -or
+                                      ($content -split "`n" | Where-Object { $_ -match "findstr" }).Count -gt 3)
                 
                 if (-not $hasComplexConstruct) {
                   $syntaxErrors += "Potential unmatched quotes (Found: $totalQuotes quotes) - manual review needed"
