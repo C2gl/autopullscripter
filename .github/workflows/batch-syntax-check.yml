@@ -44,10 +44,21 @@ jobs:
                 $syntaxErrors += "Unmatched parentheses (Open: $openParens, Close: $closeParens)"
               }
               
-              # Check for unmatched quotes
-              $doubleQuotes = ($content -split '"' | Measure-Object).Count - 1
-              if ($doubleQuotes % 2 -ne 0) {
-                $syntaxErrors += "Unmatched double quotes"
+              # Check for unmatched quotes - improved to handle escaped quotes
+              $quoteCount = 0
+              $inQuotes = $false
+              for ($j = 0; $j -lt $content.Length; $j++) {
+                $char = $content[$j]
+                if ($char -eq '"') {
+                  # Check if this quote is escaped (preceded by ^)
+                  if ($j -gt 0 -and $content[$j-1] -eq '^') {
+                    continue
+                  }
+                  $quoteCount++
+                }
+              }
+              if ($quoteCount % 2 -ne 0) {
+                $syntaxErrors += "Unmatched double quotes (Found: $quoteCount quotes)"
               }
               
               # Check for common syntax issues
@@ -71,9 +82,13 @@ jobs:
                   $syntaxErrors += "Line ${lineNum}: GOTO references undefined label '$($matches[1])'"
                 }
                 
-                # Check for invalid variable syntax
-                if ($line -match "%[^%\s]*[^%]$") {
-                  $syntaxErrors += "Line ${lineNum}: Potential unclosed variable reference"
+                # Check for invalid variable syntax - improved pattern
+                # Look for % that's not part of a proper %var% or %~var pattern
+                if ($line -match "%[^%\s]+[^%\s]$" -and $line -notmatch "%~.*%" -and $line -notmatch "%\w+%" -and $line -notmatch "%%") {
+                  # Additional check to avoid false positives with special batch constructs
+                  if ($line -notmatch "for\s+.*%\w+\s+in" -and $line -notmatch "set\s+.*%.*%") {
+                    $syntaxErrors += "Line ${lineNum}: Potential unclosed variable reference"
+                  }
                 }
               }
               
