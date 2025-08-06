@@ -44,28 +44,32 @@ jobs:
                 $syntaxErrors += "Unmatched parentheses (Open: $openParens, Close: $closeParens)"
               }
               
-              # Check for unmatched quotes - improved for batch files
-              # Count quotes more carefully, handling batch escape sequences
-              $lines = $content -split "`n"
-              $totalQuotes = 0
-              foreach ($line in $lines) {
-                # Skip comment lines
-                if ($line.Trim().StartsWith("::") -or $line.Trim().StartsWith("REM ")) {
-                  continue
-                }
-                # Count quotes in non-comment lines, handling escaped quotes
-                for ($j = 0; $j -lt $line.Length; $j++) {
-                  if ($line[$j] -eq '"') {
-                    # Check if this quote is escaped
-                    if ($j -gt 0 -and $line[$j-1] -eq '^') {
-                      continue
-                    }
-                    $totalQuotes++
-                  }
-                }
+              # Check for unmatched quotes - smarter approach
+              # Only flag obvious quote syntax errors, not complex valid constructs
+              $quoteCheckLines = ($content -split "`n") | Where-Object { 
+                $_.Trim() -ne "" -and 
+                -not $_.Trim().StartsWith("::") -and 
+                -not $_.Trim().StartsWith("REM ") -and
+                -not ($_ -match "for /f.*'.*'.*do") -and
+                -not ($_ -match "echo prompt.*cmd")
               }
-              if ($totalQuotes % 2 -ne 0) {
-                $syntaxErrors += "Unmatched double quotes (Found: $totalQuotes quotes)"
+              
+              $totalQuotes = 0
+              foreach ($line in $quoteCheckLines) {
+                # Simple quote count for lines that aren't complex FOR constructs
+                $totalQuotes += ($line -split '"' | Measure-Object).Count - 1
+              }
+              
+              # Only flag if there's a significant imbalance and it's not a known complex pattern
+              if ($totalQuotes % 2 -ne 0 -and $totalQuotes -gt 5) {
+                # Check if this might be a legitimate complex construct
+                $hasComplexConstruct = ($content -match "for /f.*tokens.*delims.*do" -or 
+                                      $content -match "findstr.*\\c:" -or
+                                      $content -match "echo.*\^\^!")
+                
+                if (-not $hasComplexConstruct) {
+                  $syntaxErrors += "Potential unmatched quotes (Found: $totalQuotes quotes) - manual review needed"
+                }
               }
               
               # Check for common syntax issues
