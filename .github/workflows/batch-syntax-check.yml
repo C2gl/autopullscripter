@@ -82,13 +82,10 @@ jobs:
                   $syntaxErrors += "Line ${lineNum}: GOTO references undefined label '$($matches[1])'"
                 }
                 
-                # Check for invalid variable syntax - improved pattern
-                # Look for % that's not part of a proper %var% or %~var pattern
-                if ($line -match "%[^%\s]+[^%\s]$" -and $line -notmatch "%~.*%" -and $line -notmatch "%\w+%" -and $line -notmatch "%%") {
-                  # Additional check to avoid false positives with special batch constructs
-                  if ($line -notmatch "for\s+.*%\w+\s+in" -and $line -notmatch "set\s+.*%.*%") {
-                    $syntaxErrors += "Line ${lineNum}: Potential unclosed variable reference"
-                  }
+                # Check for invalid variable syntax - focus on real errors only
+                # Only flag obvious syntax errors, not valid batch constructs
+                if ($line -match "%[^%\s\w~]+[^%]$" -or ($line -match "%\s" -and $line -notmatch "%%")) {
+                  $syntaxErrors += "Line ${lineNum}: Invalid variable syntax: $($line.Trim())"
                 }
               }
               
