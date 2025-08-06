@@ -100,8 +100,8 @@ jobs:
               
               if ($syntaxErrors.Count -gt 0) {
                 Write-Host "❌ ERRORS in $($file.Name):" -ForegroundColor Red
-                foreach ($error in $syntaxErrors) {
-                  Write-Host "  - $error" -ForegroundColor Red
+                foreach ($syntaxError in $syntaxErrors) {
+                  Write-Host "  - $syntaxError" -ForegroundColor Red
                 }
                 $errorCount++
               } else {
