@@ -63,17 +63,17 @@ jobs:
                 
                 # Check for labels that don't start with :
                 if ($line -match "^[a-zA-Z][a-zA-Z0-9_]*:$" -and -not $line.StartsWith(":")) {
-                  $errors += "Line $lineNum: Invalid label format - should start with ':'"
+                  $errors += "Line ${lineNum}: Invalid label format - should start with ':'"
                 }
                 
                 # Check for GOTO statements without proper labels
                 if ($line -match "goto\s+([a-zA-Z][a-zA-Z0-9_]*)" -and -not ($content -match ":$($matches[1])\b")) {
-                  $errors += "Line $lineNum: GOTO references undefined label '$($matches[1])'"
+                  $errors += "Line ${lineNum}: GOTO references undefined label '$($matches[1])'"
                 }
                 
                 # Check for invalid variable syntax
                 if ($line -match "%[^%\s]*[^%]$") {
-                  $errors += "Line $lineNum: Potential unclosed variable reference"
+                  $errors += "Line ${lineNum}: Potential unclosed variable reference"
                 }
               }
               
