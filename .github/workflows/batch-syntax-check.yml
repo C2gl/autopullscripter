@@ -35,19 +35,19 @@ jobs:
               $content = Get-Content $file.FullName -Raw
               
               # Basic syntax checks
-              $errors = @()
+              $syntaxErrors = @()
               
               # Check for unmatched parentheses
               $openParens = ($content -split '\(' | Measure-Object).Count - 1
               $closeParens = ($content -split '\)' | Measure-Object).Count - 1
               if ($openParens -ne $closeParens) {
-                $errors += "Unmatched parentheses (Open: $openParens, Close: $closeParens)"
+                $syntaxErrors += "Unmatched parentheses (Open: $openParens, Close: $closeParens)"
               }
               
               # Check for unmatched quotes
               $doubleQuotes = ($content -split '"' | Measure-Object).Count - 1
               if ($doubleQuotes % 2 -ne 0) {
-                $errors += "Unmatched double quotes"
+                $syntaxErrors += "Unmatched double quotes"
               }
               
               # Check for common syntax issues
@@ -63,17 +63,17 @@ jobs:
                 
                 # Check for labels that don't start with :
                 if ($line -match "^[a-zA-Z][a-zA-Z0-9_]*:$" -and -not $line.StartsWith(":")) {
-                  $errors += "Line ${lineNum}: Invalid label format - should start with ':'"
+                  $syntaxErrors += "Line ${lineNum}: Invalid label format - should start with ':'"
                 }
                 
                 # Check for GOTO statements without proper labels
                 if ($line -match "goto\s+([a-zA-Z][a-zA-Z0-9_]*)" -and -not ($content -match ":$($matches[1])\b")) {
-                  $errors += "Line ${lineNum}: GOTO references undefined label '$($matches[1])'"
+                  $syntaxErrors += "Line ${lineNum}: GOTO references undefined label '$($matches[1])'"
                 }
                 
                 # Check for invalid variable syntax
                 if ($line -match "%[^%\s]*[^%]$") {
-                  $errors += "Line ${lineNum}: Potential unclosed variable reference"
+                  $syntaxErrors += "Line ${lineNum}: Potential unclosed variable reference"
                 }
               }
               
@@ -90,7 +90,7 @@ jobs:
                 # Test basic cmd parsing by checking if the file can be read by cmd
                 $result = cmd /c "echo Checking syntax... && type `"$($file.FullName)`" >nul 2>&1"
                 if ($LASTEXITCODE -ne 0) {
-                  $errors += "CMD parsing failed with exit code $LASTEXITCODE"
+                  $syntaxErrors += "CMD parsing failed with exit code $LASTEXITCODE"
                 }
               } finally {
                 if (Test-Path $tempFile) {
@@ -98,9 +98,9 @@ jobs:
                 }
               }
               
-              if ($errors.Count -gt 0) {
+              if ($syntaxErrors.Count -gt 0) {
                 Write-Host "❌ ERRORS in $($file.Name):" -ForegroundColor Red
-                foreach ($error in $errors) {
+                foreach ($error in $syntaxErrors) {
                   Write-Host "  - $error" -ForegroundColor Red
                 }
                 $errorCount++
