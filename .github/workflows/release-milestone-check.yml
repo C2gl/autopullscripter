@@ -1,0 +1,144 @@
+name: Release Milestone Check
+
+on:
+  pull_request:
+    types: [opened, reopened, labeled, synchronize, milestoned]
+
+jobs:
+  check-milestone-completion:
+    runs-on: ubuntu-latest
+    # Only run if the PR has the 'release' label
+    if: contains(github.event.pull_request.labels.*.name, 'release')
+    
+    steps:
+      - name: Check milestone completion
+        uses: actions/github-script@v7
+        with:
+          script: |
+            const { data: pr } = await github.rest.pulls.get({
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              pull_number: context.issue.number
+            });
+            
+            console.log(`Checking milestone completion for release PR #${pr.number}...`);
+            
+            // Check if PR has a milestone assigned
+            if (!pr.milestone) {
+              console.log("❌ No milestone assigned to this release PR");
+              console.log("");
+              console.log("=== Summary ===");
+              console.log("❌ Release PR must have an assigned milestone!");
+              console.log("");
+              console.log("Please assign a milestone to this PR that represents the release version.");
+              core.setFailed("No milestone assigned to release PR");
+              return;
+            }
+            
+            console.log(`✅ Milestone assigned: "${pr.milestone.title}"`);
+            console.log(`   Description: ${pr.milestone.description || 'No description'}`);
+            console.log(`   Due date: ${pr.milestone.due_on || 'No due date'}`);
+            console.log("");
+            
+            // Get all issues and PRs in this milestone
+            const { data: milestoneItems } = await github.rest.issues.listForRepo({
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              milestone: pr.milestone.number,
+              state: 'all',
+              per_page: 100
+            });
+            
+            console.log(`Found ${milestoneItems.length} items in milestone "${pr.milestone.title}"`);
+            
+            // Separate issues and PRs, and categorize by state
+            const openIssues = [];
+            const openPRs = [];
+            const closedItems = [];
+            
+            milestoneItems.forEach(item => {
+              if (item.number === pr.number) {
+                // Skip the current release PR
+                return;
+              }
+              
+              if (item.state === 'open') {
+                if (item.pull_request) {
+                  openPRs.push(item);
+                } else {
+                  openIssues.push(item);
+                }
+              } else {
+                closedItems.push(item);
+              }
+            });
+            
+            console.log("");
+            console.log("=== Milestone Status ===");
+            console.log(`Closed items: ${closedItems.length}`);
+            console.log(`Open issues: ${openIssues.length}`);
+            console.log(`Open PRs (excluding this release PR): ${openPRs.length}`);
+            
+            // Show closed items
+            if (closedItems.length > 0) {
+              console.log("");
+              console.log("✅ Completed items:");
+              closedItems.forEach(item => {
+                const type = item.pull_request ? 'PR' : 'Issue';
+                console.log(`  - ${type} #${item.number}: ${item.title}`);
+              });
+            }
+            
+            // Show open issues
+            if (openIssues.length > 0) {
+              console.log("");
+              console.log("❌ Open issues that need to be resolved:");
+              openIssues.forEach(issue => {
+                console.log(`  - Issue #${issue.number}: ${issue.title}`);
+                console.log(`    URL: ${issue.html_url}`);
+              });
+            }
+            
+            // Show open PRs
+            if (openPRs.length > 0) {
+              console.log("");
+              console.log("❌ Open PRs that need to be merged or closed:");
+              openPRs.forEach(pr => {
+                console.log(`  - PR #${pr.number}: ${pr.title}`);
+                console.log(`    URL: ${pr.html_url}`);
+              });
+            }
+            
+            // Calculate completion status
+            const totalOpenItems = openIssues.length + openPRs.length;
+            const totalItems = milestoneItems.length - 1; // Exclude current release PR
+            const completedItems = closedItems.length;
+            
+            console.log("");
+            console.log("=== Summary ===");
+            
+            if (totalItems === 0) {
+              console.log("⚠️  This milestone only contains the release PR");
+              console.log("   Consider adding issues/PRs to track what's included in this release");
+            } else {
+              const completionPercentage = totalItems > 0 ? Math.round((completedItems / totalItems) * 100) : 0;
+              console.log(`Progress: ${completedItems}/${totalItems} items completed (${completionPercentage}%)`);
+            }
+            
+            if (totalOpenItems === 0) {
+              console.log("✅ All milestone items are completed!");
+              console.log("✅ This release PR is ready for milestone completion");
+            } else {
+              console.log(`❌ ${totalOpenItems} item(s) still open in milestone "${pr.milestone.title}"`);
+              console.log("");
+              console.log("Before merging this release PR, please:");
+              if (openIssues.length > 0) {
+                console.log(`  - Close ${openIssues.length} open issue(s)`);
+              }
+              if (openPRs.length > 0) {
+                console.log(`  - Merge or close ${openPRs.length} open PR(s)`);
+              }
+              console.log("  - Or remove incomplete items from the milestone if they won't be included in this release");
+              
+              core.setFailed(`Milestone "${pr.milestone.title}" has ${totalOpenItems} incomplete items`);
+            }
