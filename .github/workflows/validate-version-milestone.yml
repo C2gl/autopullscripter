@@ -80,18 +80,7 @@ jobs:
           
           if (normalizedMilestone === normalizedVersion) {
             console.log('✅ Version matches milestone!');
-            
-            // Try to post success comment (but don't fail if we can't)
-            try {
-              await github.rest.issues.createComment({
-                issue_number: context.issue.number,
-                owner: context.repo.owner,
-                repo: context.repo.repo,
-                body: `✅ **Version Validation Passed**\n\nThe version in \`checkforupdate.bat\` (\`${version}\`) matches the PR milestone (\`${milestone}\`).`
-              });
-            } catch (error) {
-              console.log('Note: Could not post comment due to permissions, but validation passed');
-            }
+            // Success - no comment needed, just pass the check
           } else {
             console.log('❌ Version does not match milestone!');
             
