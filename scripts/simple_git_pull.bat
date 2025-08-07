@@ -9,6 +9,7 @@ set "RED=%ESC%[91m"
 set "GREEN=%ESC%[92m"
 set "YELLOW=%ESC%[93m"
 set "LIGHT_BLUE=%ESC%[94m"
+set "GRAY=%ESC%[90m"
 set "RESET=%ESC%[0m"
 
 :: Default variables 
@@ -23,6 +24,15 @@ set "SUCCESS_COUNT=0"
 set "ERROR_COUNT=0"
 set "UPDATED_COUNT=0"
 set "verbose=n"
+
+:: Check if a custom repos file was provided as parameter
+if not "%~1"=="" (
+    set "repo_file=%~dp0..\%~1"
+    echo Using custom repos file: %~1
+) else (
+    set "repo_file=%~dp0..\repos.txt"
+    echo Using default repos file: repos.txt
+)
 
 :: Store the original script directory for logging
 set "SCRIPT_DIR=%~dp0.."
@@ -148,20 +158,61 @@ for /f "usebackq delims=" %%R in ("%repo_file%") do (
         set "has_changes=false"
         
         if !git_exit_code! neq 0 set "is_error=true"
-        findstr /i "error fatal denied permission authentication" temp_output.txt >nul 2>&1
+        
+        :: Only check for actual error messages, not words that might appear in branch names
+        findstr /i /c:"error:" /c:"fatal:" /c:"denied" /c:"permission denied" /c:"authentication failed" temp_output.txt >nul 2>&1
         if !errorlevel! equ 0 set "is_error=true"
         
-        :: Check if already up to date
-        findstr /i "already up.to.date" temp_output.txt >nul 2>&1
-        if !errorlevel! equ 0 set "is_up_to_date=true"
-        
-        :: Check if changes were pulled (common indicators)
-        findstr /i "fast.forward updating files changed insertions deletions" temp_output.txt >nul 2>&1
+        :: Check if changes were pulled - prioritize this check before "already up to date"
+        :: This fixes false negatives when git shows both remote updates AND "already up to date"
+        findstr /i "fast-forward" temp_output.txt >nul 2>&1
         if !errorlevel! equ 0 set "has_changes=true"
+        
+        if "!has_changes!"=="false" (
+            findstr /i "updating" temp_output.txt >nul 2>&1
+            if !errorlevel! equ 0 set "has_changes=true"
+        )
+        
+        if "!has_changes!"=="false" (
+            findstr /i "files changed" temp_output.txt >nul 2>&1
+            if !errorlevel! equ 0 set "has_changes=true"
+        )
+        
+        if "!has_changes!"=="false" (
+            findstr /i "insertions" temp_output.txt >nul 2>&1
+            if !errorlevel! equ 0 set "has_changes=true"
+        )
+        
+        if "!has_changes!"=="false" (
+            findstr /i "deletions" temp_output.txt >nul 2>&1
+            if !errorlevel! equ 0 set "has_changes=true"
+        )
+        
+        :: Additional change detection patterns for better accuracy
+        if "!has_changes!"=="false" (
+            findstr /i "merge" temp_output.txt >nul 2>&1
+            if !errorlevel! equ 0 set "has_changes=true"
+        )
+        
+        if "!has_changes!"=="false" (
+            findstr /i "create mode" temp_output.txt >nul 2>&1
+            if !errorlevel! equ 0 set "has_changes=true"
+        )
+        
+        if "!has_changes!"=="false" (
+            findstr /i "delete mode" temp_output.txt >nul 2>&1
+            if !errorlevel! equ 0 set "has_changes=true"
+        )
+        
+        :: Check if already up to date (only after checking for changes)
+        findstr /i "already up" temp_output.txt | findstr /i "to date" >nul 2>&1
+        if !errorlevel! equ 0 set "is_up_to_date=true"
         
         :: Display the output to user (only in verbose mode)
         if /i "!verbose!"=="y" (
+            echo %GRAY%
             type temp_output.txt
+            echo %RESET%
         )
         
         :: Also append complete git output to log file
@@ -176,17 +227,8 @@ for /f "usebackq delims=" %%R in ("%repo_file%") do (
                 echo %RED%ERROR%RESET%
             )
             echo %date% %time% - ERROR ^| Git pull failed for !currentPath! - Exit code: !git_exit_code! >> "%LOG_PATH%"
-        ) else if "!is_up_to_date!"=="true" (
-            :: Already up to date
-            set /a SUCCESS_COUNT+=1
-            if /i "!verbose!"=="y" (
-                echo %YELLOW%OK - ALREADY UP TO DATE%RESET% ^| No changes for !currentPath!
-            ) else (
-                echo %YELLOW%OK - ALREADY UP TO DATE%RESET%
-            )
-            echo %date% %time% - OK - ALREADY UP TO DATE ^| No changes for !currentPath! >> "%LOG_PATH%"
         ) else if "!has_changes!"=="true" (
-            :: Changes were pulled
+            :: Changes were pulled - prioritize this over "already up to date"
             set /a SUCCESS_COUNT+=1
             set /a UPDATED_COUNT+=1
             if /i "!verbose!"=="y" (
@@ -195,6 +237,15 @@ for /f "usebackq delims=" %%R in ("%repo_file%") do (
                 echo %GREEN%OK - PULLED NEW CHANGES%RESET%
             )
             echo %date% %time% - OK - PULLED NEW CHANGES ^| Changes pulled for !currentPath! >> "%LOG_PATH%"
+        ) else if "!is_up_to_date!"=="true" (
+            :: Already up to date (only if no changes detected)
+            set /a SUCCESS_COUNT+=1
+            if /i "!verbose!"=="y" (
+                echo %YELLOW%OK - ALREADY UP TO DATE%RESET% ^| No changes for !currentPath!
+            ) else (
+                echo %YELLOW%OK - ALREADY UP TO DATE%RESET%
+            )
+            echo %date% %time% - OK - ALREADY UP TO DATE ^| No changes for !currentPath! >> "%LOG_PATH%"
         ) else (
             :: Generic success (fallback)
             set /a SUCCESS_COUNT+=1
@@ -222,10 +273,11 @@ for /f "usebackq delims=" %%R in ("%repo_file%") do (
     :: Optional custom command execution
     if /i "!docustomcommand!"=="y" (
         if /i "!verbose!"=="y" (
-            echo Running custom command: !customcommand!
+            echo.
+            echo %YELLOW%Running custom command:%RESET% !customcommand!
         )
-        echo %date% %time% - Running custom command: !customcommand! >> "%LOG_PATH%"
-        !customcommand!
+        :: Pass the custom command, current repository path, log file, and verbose mode to the custom command script
+        call "%~dp0customcommand.bat" "!customcommand!" "!currentPath!" "%AUTOPULL_LOGFILE%" "!verbose!"
     )
 
     if /i "!verbose!"=="y" (
