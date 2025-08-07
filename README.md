@@ -29,7 +29,7 @@ Add repository paths to `repos.txt`, one per line. Each line should contain the 
 ### 
 > important! 
     the repos.txt will be deprecated in a few releases, and will use a new structure like the one you can find in repos_enhanced.txt, later on, you will just need to have the repos.txt file be structured like the enhanced.
-    for the moment, you can choose what folder structure is to be ran 
+    For the moment, you can choose what folder structure is to be ran.
 
 ### Automatic Scanning
 The script can scan any folder path and automatically detect Git repositories (looks for `.git` folders). It will:
