@@ -28,6 +28,14 @@ jobs:
             errorCount=$((errorCount + 1))
           fi
           
+          # Check for run.bat
+          if [ -f "run.bat" ]; then
+            echo "✅ run.bat found"
+          else
+            echo "❌ run.bat is missing"
+            errorCount=$((errorCount + 1))
+          fi
+          
           # Check for releases folder
           if [ -d "releases" ]; then
             echo "✅ releases/ folder found"
@@ -58,6 +66,7 @@ jobs:
             echo ""
             echo "Required files for release PR:"
             echo "  - README.md (in root directory)"
+            echo "  - run.bat (in root directory)"
             echo "  - At least one .exe file in releases/ folder"
             exit 1
           fi
