@@ -1,17 +1,6 @@
 :: first_startup.bat
-:: This file is called by run.bat and will go back to it when done runn    } else if "!choice!"=="3" (
-        echo Skipping creation of repos_enhanced.txt file.
-        echo WITHOUT repos_enhanced.txt file, the script will NOT function properly. And thus close without running.
-        echo %date% %time% - User chose to skip repos_enhanced.txt creation >> "%LOG_PATH%"
-        pause
-        goto :eof
-        
-    ) else (
-        echo Invalid choice. Please run the script again and select 1, 2, or 3.
-        echo %date% %time% - Invalid choice entered: !choice! >> "%LOG_PATH%"
-        pause
-        goto :eof
-    )ff
+:: This file is called by run.bat and will go back to it when done running 
+@echo off
 
 setlocal enabledelayedexpansion
 
@@ -103,9 +92,9 @@ if EXIST "%~dp0..\repos_enhanced.txt" (
         )
         
     ) else if "!choice!"=="3" (
-        echo Skipping creation of repos.txt file.
-        echo WITHOUT repos.txt file, the script will NOT function properly. And thus close without running.
-        echo %date% %time% - User chose to skip repos.txt creation >> "%LOG_PATH%"
+        echo Skipping creation of repos_enhanced.txt file.
+        echo WITHOUT repos_enhanced.txt file, the script will NOT function properly. And thus close without running.
+        echo %date% %time% - User chose to skip repos_enhanced.txt creation >> "%LOG_PATH%"
         pause
         goto :eof
         
