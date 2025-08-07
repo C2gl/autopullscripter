@@ -47,7 +47,6 @@ C:\path\to\repository4
 - `[LEARNING]` - Educational or tutorial repositories
 - `[WEB_DEVELOPMENT]` - Frontend/backend web projects
 - `[DATA_SCIENCE]` - Analytics, ML, or data projects
-
 ### Automatic Scanning
 The script can scan any folder path and automatically detect Git repositories (looks for `.git` folders). It will:
 - Scan the root directory and up to 2 levels of subdirectories
