@@ -14,7 +14,7 @@ set "RESET=%ESC%[0m"
 
 :: Configuration
 set "GITHUB_REPO=C2gl/autopullscripter"
-set "CURRENT_VERSION=v0.4.1"
+set "CURRENT_VERSION=v0.5.0"
 set "TEMP_FILE=%temp%\github_latest_release.json"
 
 :: Set up logging path
