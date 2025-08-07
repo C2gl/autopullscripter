@@ -1,0 +1,62 @@
+name: Release PR File Check
+
+on:
+  pull_request:
+    branches:
+      - release
+
+jobs:
+  check-required-files:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Check for required files
+        shell: bash
+        run: |
+          echo "Checking for required files in pull request to release branch..."
+          
+          errorCount=0
+          
+          # Check for README.md
+          if [ -f "README.md" ]; then
+            echo "✅ README.md found"
+          else
+            echo "❌ README.md is missing"
+            errorCount=$((errorCount + 1))
+          fi
+          
+          # Check for releases folder
+          if [ -d "releases" ]; then
+            echo "✅ releases/ folder found"
+            
+            # Check if there are any files in the releases folder
+            releaseFiles=$(find releases/ -type f | wc -l)
+            if [ $releaseFiles -gt 0 ]; then
+              echo "✅ Found $releaseFiles file(s) in releases/ folder"
+              echo "Release files:"
+              find releases/ -type f | sed 's/^/  - /'
+            else
+              echo "❌ releases/ folder exists but is empty"
+              errorCount=$((errorCount + 1))
+            fi
+          else
+            echo "❌ releases/ folder is missing"
+            errorCount=$((errorCount + 1))
+          fi
+          
+          # Summary
+          echo ""
+          echo "=== Summary ==="
+          if [ $errorCount -eq 0 ]; then
+            echo "✅ All required files are present!"
+            exit 0
+          else
+            echo "❌ $errorCount required file(s) missing!"
+            echo ""
+            echo "Required files for release branch:"
+            echo "  - README.md (in root directory)"
+            echo "  - At least one file in releases/ folder"
+            exit 1
+          fi
