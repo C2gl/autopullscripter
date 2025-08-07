@@ -14,34 +14,57 @@ A simple .bat script to automatically pull all actively folowed git repos.
 3. Run the script - it will guide you through the setup process
 
 ## First Run Setup
-On the first run, the script will automatically detect if `repos.txt` doesn't exist and offer you three options:
+On the first run, the script will automatically detect if `repos_enhanced.txt` doesn't exist and offer you three options:
 
-1. **Create empty repos.txt** - Creates an empty file for you to manually edit with repository paths
-2. **Scan a folder for Git repositories** - Automatically discovers existing Git repositories in a specified folder path (scans up to 2 levels deep)
-3. **Exit without creating repos.txt** - Exits the script (requires repos.txt to function)
+1. **Create empty repos_enhanced.txt** - Creates an empty categorized file for you to manually edit with repository paths organized by categories
+2. **Scan a folder for Git repositories** - Automatically discovers existing Git repositories in a specified folder path (scans up to 2 levels deep) and organizes them in categories
+3. **Exit without creating repos_enhanced.txt** - Exits the script (requires repos_enhanced.txt to function)
 
 ## Repository Management
-The script offers multiple ways to populate your repository list:
+The script uses a categorized repository structure in `repos_enhanced.txt` that allows you to organize your repositories by purpose, project type, or any other grouping that makes sense for your workflow.
 
 ### Manual Addition
-Add repository paths to `repos.txt`, one per line. Each line should contain the full path to a Git repository folder.
+Add repository paths to `repos_enhanced.txt` organized by categories. The format is:
 
-### 
-> important! 
-    the repos.txt will be deprecated in a few releases, and will use a new structure like the one you can find in repos_enhanced.txt, later on, you will just need to have the repos.txt file be structured like the enhanced.
-    for the moment, you can choose what folder structure is to be ran 
+```
+# Repository Categories Configuration  
+# Lines starting with # are comments and ignored
+# Empty lines are also ignored
 
+[CATEGORY_NAME]
+C:\path\to\repository1
+C:\path\to\repository2
+
+[ANOTHER_CATEGORY]
+C:\path\to\repository3
+C:\path\to\repository4
+```
+
+**Examples of useful categories:**
+- `[PERSONAL_PROJECTS]` - Your own coding projects
+- `[WORK_PROJECTS]` - Professional/work repositories  
+- `[OPEN_SOURCE]` - Contributions to open source projects
+- `[LEARNING]` - Educational or tutorial repositories
+- `[WEB_DEVELOPMENT]` - Frontend/backend web projects
+- `[DATA_SCIENCE]` - Analytics, ML, or data projects
 ### Automatic Scanning
 The script can scan any folder path and automatically detect Git repositories (looks for `.git` folders). It will:
 - Scan the root directory and up to 2 levels of subdirectories
-- Check if repositories are already in your `repos.txt` to avoid duplicates
+- Check if repositories are already in your `repos_enhanced.txt` to avoid duplicates
 - Show you all found repositories before adding them
 - Let you confirm which repositories to add
+- Organize them into a timestamped category
 
 ### Clone New Repositories
-The script can clone new repositories from remote URLs and automatically add them to your tracking list.
+The script can clone new repositories from remote URLs and automatically add them to your tracking list in the appropriate category.
 
-You can check the [example file](https://github.com/C2gl/autopullscripter/blob/main/example_repos.txt) in the GitHub repository for reference.
+### Category-Based Operations
+You can choose to pull repositories from:
+- **All categories** - Pull from every repository in your file
+- **Specific categories** - Select only certain categories to update (e.g., only work projects, only personal projects)
+- **Individual selection** - Choose exactly which repository groups to process
+
+You can check the [example file](https://github.com/C2gl/autopullscripter/blob/main/example_repos_enhanced.txt) in the GitHub repository for reference.
 
 ## Configuration Options
 
@@ -63,6 +86,8 @@ If you choose custom settings, you can configure:
 | Verbose mode                          | Enable detailed output and progress information (`y`/`n`)                                    | `y`                      |
 
 ### Features
+- **Category-Based Organization**: Organize repositories by project type, purpose, or any grouping that makes sense
+- **Selective Processing**: Choose to pull from all categories or select specific ones
 - **Smart Error Detection**: Detects authentication errors, network issues, and repository problems
 - **Progress Tracking**: Visual progress bar showing completion status
 - **Color-Coded Output**: Green for success, red for errors, yellow for up-to-date repositories
@@ -88,7 +113,7 @@ After processing all repositories, you'll see a summary showing:
 In the (far) future, quite a few features are planned. This is not meant to be a comprehensive tool, but rather a fun project to practice basic coding.
 
 - [X] The ability to pull new repos
-- [X] Automatically populate the repos.txt
+- [X] Automatically populate the repository list
 - [X] Comprehensive logging system with timestamps
 - [X] Progress tracking and visual feedback
 - [X] Color-coded output for better readability
@@ -96,8 +121,8 @@ In the (far) future, quite a few features are planned. This is not meant to be a
 - [X] Smart error detection and handling
 - [X] Verbose mode for detailed output
 - [X] Automated checking for available updates
-- [ ] An automated fetcher to see release changes when you didn't keep yourself up to date with the repo for a while
 - [X] Sort repositories by category and choose what category to pull
+- [ ] An automated fetcher to see release changes when you didn't keep yourself up to date with the repo for a while
 - [ ] The ability to have a cron job
 - [ ] Configuration file support for persistent settings
 
