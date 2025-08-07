@@ -12,45 +12,46 @@ echo %date% %time% - Starting first_startup.bat >> "%LOG_PATH%"
 echo %date% %time% - Script directory: %SCRIPT_DIR% >> "%LOG_PATH%"
 echo %date% %time% - Log path: %LOG_PATH% >> "%LOG_PATH%"
 
-:: Check for existing repos.txt file
-echo %date% %time% - Checking for repos.txt file >> "%LOG_PATH%"
-if EXIST "%~dp0..\repos.txt" (
-    echo repos.txt found.
-    echo %date% %time% - repos.txt found at: %~dp0..\repos.txt >> "%LOG_PATH%"
+:: Check for existing repos_enhanced.txt file
+echo %date% %time% - Checking for repos_enhanced.txt file >> "%LOG_PATH%"
+if EXIST "%~dp0..\repos_enhanced.txt" (
+    echo repos_enhanced.txt found.
+    echo %date% %time% - repos_enhanced.txt found at: %~dp0..\repos_enhanced.txt >> "%LOG_PATH%"
     
-    :: Check for enhanced repos file
-    if EXIST "%~dp0..\repos_enhanced.txt" (
-        echo repos_enhanced.txt also found.
-        echo %date% %time% - repos_enhanced.txt found at: %~dp0..\repos_enhanced.txt >> "%LOG_PATH%"
-    ) else (
-        echo %date% %time% - repos_enhanced.txt NOT found >> "%LOG_PATH%"
-    )
-    
-    :: Jump to main menu since repos.txt exists
+    :: Jump to main menu since repos_enhanced.txt exists
     goto :main_menu
     
 ) ELSE (
-    echo repos.txt NOT found.
-    echo %date% %time% - repos.txt NOT found, starting creation process >> "%LOG_PATH%"
+    echo repos_enhanced.txt NOT found.
+    echo %date% %time% - repos_enhanced.txt NOT found, starting creation process >> "%LOG_PATH%"
     
-    timeout /t 5
+    timeout /t 3
     echo.
     echo What would you like to do?
-    echo 1. Create empty repos.txt file and add repositories manually
+    echo 1. Create empty repos_enhanced.txt file and add repositories manually
     echo 2. Scan a folder path for existing Git repositories
-    echo 3. Exit without creating repos.txt
+    echo 3. Exit without creating repos_enhanced.txt
     echo.
     set /p "choice=Enter your choice (1/2/3): "
-    echo %date% %time% - User input: repos.txt creation choice: !choice! >> "%LOG_PATH%"
+    echo %date% %time% - User input: repos_enhanced.txt creation choice: !choice! >> "%LOG_PATH%"
     
     if "!choice!"=="1" (
-        echo Creating empty repos.txt file...
-        echo %date% %time% - Creating empty repos.txt file >> "%LOG_PATH%"
-        type nul > "%~dp0..\repos.txt"
-        echo repos.txt file created in parent directory.
-        echo %date% %time% - Empty repos.txt file created successfully >> "%LOG_PATH%"
+        echo Creating empty repos_enhanced.txt file...
+        echo %date% %time% - Creating empty repos_enhanced.txt file >> "%LOG_PATH%"
         
-        set /p "addrepos=Do you want to add repository paths to repos.txt now? (y/n): "
+        echo # Repository Categories Configuration > "%~dp0..\repos_enhanced.txt"
+        echo # Format: [CATEGORY_NAME] followed by repository paths >> "%~dp0..\repos_enhanced.txt"
+        echo # Empty lines and lines starting with # are ignored >> "%~dp0..\repos_enhanced.txt"
+        echo. >> "%~dp0..\repos_enhanced.txt"
+        echo # Example: >> "%~dp0..\repos_enhanced.txt"
+        echo # [MY_PROJECTS] >> "%~dp0..\repos_enhanced.txt"
+        echo # C:\path\to\my\repository >> "%~dp0..\repos_enhanced.txt"
+        echo. >> "%~dp0..\repos_enhanced.txt"
+        
+        echo repos_enhanced.txt file created in parent directory.
+        echo %date% %time% - Empty repos_enhanced.txt file created successfully >> "%LOG_PATH%"
+        
+        set /p "addrepos=Do you want to add repository paths to repos_enhanced.txt now? (y/n): "
         echo %date% %time% - User input: Add repositories: !addrepos! >> "%LOG_PATH%"
         
         if /i "!addrepos!"=="y" (
@@ -58,8 +59,8 @@ if EXIST "%~dp0..\repos.txt" (
             call "%~dp0clone_repo.bat"
             echo %date% %time% - Returned from clone_repo.bat >> "%LOG_PATH%"
         ) else (
-            echo Please edit the repos.txt file to add your repository paths.
-            echo Run the script again after editing the repos.txt file.
+            echo Please edit the repos_enhanced.txt file to add your repository paths.
+            echo Run the script again after editing the repos_enhanced.txt file.
             echo %date% %time% - User chose not to add repositories immediately >> "%LOG_PATH%"
             pause
             goto :eof
@@ -71,29 +72,29 @@ if EXIST "%~dp0..\repos.txt" (
         call "%~dp0scan_repos.bat"
         echo %date% %time% - Returned from scan_repos.bat >> "%LOG_PATH%"
         
-        :: Check if repos.txt was created and has content
-        if exist "%~dp0..\repos.txt" (
-            for /f %%A in ('type "%~dp0..\repos.txt" ^| find /c /v ""') do set "line_count=%%A"
-            if !line_count! gtr 0 (
-                echo repos.txt has been populated with !line_count! repositories.
-                echo %date% %time% - repos.txt populated with !line_count! repositories via scan >> "%LOG_PATH%"
+        :: Check if repos_enhanced.txt was created and has content
+        if exist "%~dp0..\repos_enhanced.txt" (
+            for /f %%A in ('type "%~dp0..\repos_enhanced.txt" ^| find /c /v ""') do set "line_count=%%A"
+            if !line_count! gtr 5 (
+                echo repos_enhanced.txt has been populated with repositories.
+                echo %date% %time% - repos_enhanced.txt populated with repositories via scan >> "%LOG_PATH%"
             ) else (
-                echo repos.txt exists but is empty. Please add repository paths manually.
-                echo %date% %time% - repos.txt created but empty >> "%LOG_PATH%"
+                echo repos_enhanced.txt exists but may be empty. Please add repository paths manually.
+                echo %date% %time% - repos_enhanced.txt created but may be empty >> "%LOG_PATH%"
                 pause
                 goto :eof
             )
         ) else (
-            echo repos.txt was not created. Exiting.
-            echo %date% %time% - repos.txt was not created by scanner >> "%LOG_PATH%"
+            echo repos_enhanced.txt was not created. Exiting.
+            echo %date% %time% - repos_enhanced.txt was not created by scanner >> "%LOG_PATH%"
             pause
             goto :eof
         )
         
     ) else if "!choice!"=="3" (
-        echo Skipping creation of repos.txt file.
-        echo WITHOUT repos.txt file, the script will NOT function properly. And thus close without running.
-        echo %date% %time% - User chose to skip repos.txt creation >> "%LOG_PATH%"
+        echo Skipping creation of repos_enhanced.txt file.
+        echo WITHOUT repos_enhanced.txt file, the script will NOT function properly. And thus close without running.
+        echo %date% %time% - User chose to skip repos_enhanced.txt creation >> "%LOG_PATH%"
         pause
         goto :eof
         
@@ -108,38 +109,22 @@ if EXIST "%~dp0..\repos.txt" (
 :main_menu
 echo %date% %time% - Entering main menu >> "%LOG_PATH%"
 echo.
-echo Choose execution mode:
-echo 1. NORMAL MODE - Use standard repos.txt file
-echo 2. ENHANCED CATEGORY MODE - Use categorized repositories
+echo ===== AutoPull Scripter - Enhanced Mode =====
 echo.
-echo Additional options:
-echo 3. Clone new repositories (add new remote repos)
-echo 4. Scan folder for existing repositories (add local repos)
-echo 5. Pull repos from a different repos.txt file (will need to provide a different name)
-echo 6. Exit without any action
+echo Choose what you'd like to do:
+echo 1. Pull repositories (Enhanced Category Mode)
+echo 2. Clone new repositories (add new remote repos)
+echo 3. Scan folder for existing repositories (add local repos)  
+echo 4. Pull repos from a different enhanced repos file
+echo 5. Exit without any action
 echo.
-set /p "action_choice=What would you like to do? (1/2/3/4/5/6): "
+set /p "action_choice=What would you like to do? (1/2/3/4/5): "
 echo %date% %time% - User input: Action choice: !action_choice! >> "%LOG_PATH%"
 echo %date% %time% - DEBUG: Processing action choice: !action_choice! >> "%LOG_PATH%"
 
 if "!action_choice!"=="1" (
-    echo Continuing with NORMAL MODE using repos.txt...
-    echo %date% %time% - DEBUG: Selected NORMAL MODE >> "%LOG_PATH%"
-    echo %date% %time% - DEBUG: About to call simple_git_pull.bat >> "%LOG_PATH%"
-    echo %date% %time% - DEBUG: Full path: %~dp0simple_git_pull.bat >> "%LOG_PATH%"
-    
-    call "%~dp0simple_git_pull.bat"
-    set "call_result=!errorlevel!"
-    
-    echo %date% %time% - DEBUG: Call completed with errorlevel: !call_result! >> "%LOG_PATH%"
-    echo Normal mode completed.
-    pause
-    goto :eof
-    
-) else if "!action_choice!"=="2" (
-    echo Starting ENHANCED CATEGORY MODE...
-    echo Calling enhanced script directly...
-    echo %date% %time% - DEBUG: Selected ENHANCED CATEGORY MODE >> "%LOG_PATH%"
+    echo Starting Enhanced Category Mode...
+    echo %date% %time% - DEBUG: Selected Enhanced Category Mode >> "%LOG_PATH%"
     echo %date% %time% - DEBUG: About to call simple_git_pull_enhanced.bat >> "%LOG_PATH%"
     echo %date% %time% - DEBUG: Full path: %~dp0simple_git_pull_enhanced.bat >> "%LOG_PATH%"
     
@@ -151,50 +136,50 @@ if "!action_choice!"=="1" (
     pause
     goto :eof
     
-) else if "!action_choice!"=="3" (
+) else if "!action_choice!"=="2" (
     echo %date% %time% - DEBUG: Selected Clone repositories option >> "%LOG_PATH%"
     call "%~dp0clone_repo.bat"
     echo %date% %time% - DEBUG: Returned from clone_repo.bat >> "%LOG_PATH%"
     pause
     goto :eof
     
-) else if "!action_choice!"=="4" (
+) else if "!action_choice!"=="3" (
     echo %date% %time% - DEBUG: Selected Scan repositories option >> "%LOG_PATH%"
     call "%~dp0scan_repos.bat"
     echo %date% %time% - DEBUG: Returned from scan_repos.bat >> "%LOG_PATH%"
     pause
     goto :eof
     
-) else if "!action_choice!"=="5" (
-    echo %date% %time% - DEBUG: Selected Custom repos file option >> "%LOG_PATH%"
-    set /p "new_repos_file=Enter the name of the new repos.txt file (with .txt extension): "
-    echo %date% %time% - User input: Custom repos file: !new_repos_file! >> "%LOG_PATH%"
+) else if "!action_choice!"=="4" (
+    echo %date% %time% - DEBUG: Selected Custom enhanced repos file option >> "%LOG_PATH%"
+    set /p "new_repos_file=Enter the name of the enhanced repos file (with .txt extension): "
+    echo %date% %time% - User input: Custom enhanced repos file: !new_repos_file! >> "%LOG_PATH%"
     
     if exist "%~dp0..\!new_repos_file!" (
-        echo Using repos.txt file: !new_repos_file!
-        echo %date% %time% - DEBUG: Custom file exists, calling simple_git_pull.bat with: !new_repos_file! >> "%LOG_PATH%"
-        call "%~dp0simple_git_pull.bat" "!new_repos_file!"
-        echo %date% %time% - DEBUG: Returned from simple_git_pull.bat (custom file) >> "%LOG_PATH%"
-        echo Custom file mode completed.
+        echo Using enhanced repos file: !new_repos_file!
+        echo %date% %time% - DEBUG: Custom file exists, calling simple_git_pull_enhanced.bat with: !new_repos_file! >> "%LOG_PATH%"
+        call "%~dp0simple_git_pull_enhanced.bat" "!new_repos_file!"
+        echo %date% %time% - DEBUG: Returned from simple_git_pull_enhanced.bat (custom file) >> "%LOG_PATH%"
+        echo Custom enhanced file mode completed.
         pause
         goto :eof
     ) else (
-        echo The specified repos.txt file does not exist. Please check the name and try again.
-        echo %date% %time% - DEBUG: Custom file does not exist: !new_repos_file! >> "%LOG_PATH%"
+        echo The specified enhanced repos file does not exist. Please check the name and try again.
+        echo %date% %time% - DEBUG: Custom enhanced file does not exist: !new_repos_file! >> "%LOG_PATH%"
         pause
         goto :eof
     )
     
-) else if "!action_choice!"=="6" (
+) else if "!action_choice!"=="5" (
     echo Exiting without any action.
     echo %date% %time% - DEBUG: User selected exit option >> "%LOG_PATH%"
     goto :eof
     
 ) else (
-    echo Invalid choice. Using NORMAL MODE...
-    echo %date% %time% - DEBUG: Invalid choice, falling back to NORMAL MODE: !action_choice! >> "%LOG_PATH%"
-    call "%~dp0simple_git_pull.bat"
-    echo Normal mode completed (fallback).
+    echo Invalid choice. Starting Enhanced Category Mode...
+    echo %date% %time% - DEBUG: Invalid choice, falling back to Enhanced Category Mode: !action_choice! >> "%LOG_PATH%"
+    call "%~dp0simple_git_pull_enhanced.bat"
+    echo Enhanced mode completed (fallback).
     pause
     goto :eof
 )
