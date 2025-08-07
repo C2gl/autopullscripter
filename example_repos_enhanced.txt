@@ -1,0 +1,32 @@
+# Repository Categories Configuration
+# Format: [CATEGORY_NAME] followed by repository paths
+# Empty lines and lines starting with # are ignored
+
+[PERSONAL_PROJECTS]
+C:\Users\YourUsername\Documents\GitHub\my-awesome-project
+C:\Users\YourUsername\Documents\GitHub\personal-website
+C:\Users\YourUsername\Documents\GitHub\learning-python
+
+[WORK_PROJECTS]
+C:\Users\YourUsername\Documents\Work\client-dashboard
+C:\Users\YourUsername\Documents\Work\internal-tools
+C:\Users\YourUsername\Documents\Work\api-service
+
+[OPEN_SOURCE_CONTRIBUTIONS]
+C:\Users\YourUsername\Documents\GitHub\vscode
+C:\Users\YourUsername\Documents\GitHub\react
+C:\Users\YourUsername\Documents\GitHub\node
+
+[WEB_DEVELOPMENT]
+C:\Users\YourUsername\Documents\GitHub\frontend-framework
+C:\Users\YourUsername\Documents\GitHub\css-library
+C:\Users\YourUsername\Documents\GitHub\javascript-utils
+
+[DATA_SCIENCE]
+C:\Users\YourUsername\Documents\GitHub\data-analysis-project
+C:\Users\YourUsername\Documents\GitHub\machine-learning-models
+C:\Users\YourUsername\Documents\GitHub\visualization-tools
+
+[ARCHIVED_PROJECTS]
+C:\Users\YourUsername\Documents\GitHub\old-project-1
+C:\Users\YourUsername\Documents\GitHub\deprecated-tool

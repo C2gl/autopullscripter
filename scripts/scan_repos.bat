@@ -3,8 +3,10 @@
 @echo off
 setlocal enabledelayedexpansion
 
-:: Initialize logging
-echo %date% %time% - Repository scanner started >> "%LOG_PATH%"
+:: Initialize logging    echo No new Git repositories found in the specified path.
+    if exist "%~dp0..\repos_enhanced.txt" (
+        echo All repositories in this path may already be in repos_enhanced.txt
+        echo %date% %time% - No new repositories found - all may already exist in repos_enhanced.txt >> "%LOG_PATH%"ho %date% %time% - Repository scanner started >> "%LOG_PATH%"
 
 :: Enable error handling
 set "error_occurred=false"
@@ -15,7 +17,7 @@ set "LOG_PATH=%SCRIPT_DIR%\log\%AUTOPULL_LOGFILE%"
 
 echo.
 echo ===== Auto Repository Scanner =====
-echo This will scan a folder path for Git repositories and add them to repos.txt
+echo This will scan a folder path for Git repositories and add them to repos_enhanced.txt
 echo.
 echo %date% %time% - Repository scanner UI displayed >> "%LOG_PATH%"
 
@@ -69,14 +71,14 @@ if exist "!scan_path!\.git" (
     echo Checking repository: !scan_path!
     echo %date% %time% - Found .git folder in root directory: !scan_path! >> "%LOG_PATH%"
     
-    :: Check if this repo is already in repos.txt
+    :: Check if this repo is already in repos_enhanced.txt
     set "already_exists=false"
-    if exist "%~dp0..\repos.txt" (
-        findstr /i /c:"!scan_path!" "%~dp0..\repos.txt" >nul 2>&1
+    if exist "%~dp0..\repos_enhanced.txt" (
+        findstr /i /c:"!scan_path!" "%~dp0..\repos_enhanced.txt" >nul 2>&1
         if !errorlevel! equ 0 (
             set "already_exists=true"
-            echo Repository already exists in repos.txt: !scan_path!
-            echo %date% %time% - Repository already exists in repos.txt: !scan_path! >> "%LOG_PATH%"
+            echo Repository already exists in repos_enhanced.txt: !scan_path!
+            echo %date% %time% - Repository already exists in repos_enhanced.txt: !scan_path! >> "%LOG_PATH%"
         )
     )
     
@@ -99,14 +101,14 @@ if !errorlevel! equ 0 (
             echo Checking repository: !repo_path!
             echo %date% %time% - Found .git folder in subdirectory: !repo_path! >> "%LOG_PATH%"
             
-            :: Check if this repo is already in repos.txt
+            :: Check if this repo is already in repos_enhanced.txt
             set "already_exists=false"
-            if exist "%~dp0..\repos.txt" (
-                findstr /i /c:"!repo_path!" "%~dp0..\repos.txt" >nul 2>&1
+            if exist "%~dp0..\repos_enhanced.txt" (
+                findstr /i /c:"!repo_path!" "%~dp0..\repos_enhanced.txt" >nul 2>&1
                 if !errorlevel! equ 0 (
                     set "already_exists=true"
-                    echo Repository already exists in repos.txt: !repo_path!
-                    echo %date% %time% - Repository already exists in repos.txt: !repo_path! >> "%LOG_PATH%"
+                    echo Repository already exists in repos_enhanced.txt: !repo_path!
+                    echo %date% %time% - Repository already exists in repos_enhanced.txt: !repo_path! >> "%LOG_PATH%"
                 )
             )
             
@@ -129,14 +131,14 @@ if !errorlevel! equ 0 (
                         echo Checking repository: !repo_path!
                         echo %date% %time% - Found .git folder in nested directory: !repo_path! >> "%LOG_PATH%"
                         
-                        :: Check if this repo is already in repos.txt
+                        :: Check if this repo is already in repos_enhanced.txt
                         set "already_exists=false"
-                        if exist "%~dp0..\repos.txt" (
-                            findstr /i /c:"!repo_path!" "%~dp0..\repos.txt" >nul 2>&1
+                        if exist "%~dp0..\repos_enhanced.txt" (
+                            findstr /i /c:"!repo_path!" "%~dp0..\repos_enhanced.txt" >nul 2>&1
                             if !errorlevel! equ 0 (
                                 set "already_exists=true"
-                                echo Repository already exists in repos.txt: !repo_path!
-                                echo %date% %time% - Repository already exists in repos.txt: !repo_path! >> "%LOG_PATH%"
+                                echo Repository already exists in repos_enhanced.txt: !repo_path!
+                                echo %date% %time% - Repository already exists in repos_enhanced.txt: !repo_path! >> "%LOG_PATH%"
                             )
                         )
                         
@@ -196,36 +198,44 @@ if exist "!temp_repos!" (
 echo ----------------------------------------
 echo.
 
-set /p "confirm=Do you want to add all !repo_count! repositories to repos.txt? (y/n): "
+set /p "confirm=Do you want to add all !repo_count! repositories to repos_enhanced.txt? (y/n): "
 echo %date% %time% - User input: Add !repo_count! repositories: !confirm! >> "%LOG_PATH%"
 
 if /i "!confirm!"=="y" (
     echo.
-    echo Adding repositories to repos.txt...
-    echo %date% %time% - User confirmed addition of repositories to repos.txt >> "%LOG_PATH%"
+    echo Adding repositories to repos_enhanced.txt...
+    echo %date% %time% - User confirmed addition of repositories to repos_enhanced.txt >> "%LOG_PATH%"
     
-    :: Create repos.txt if it doesn't exist
-    if not exist "%~dp0..\repos.txt" (
-        echo Creating new repos.txt file...
-        type nul > "%~dp0..\repos.txt"
-        echo %date% %time% - Created new repos.txt file >> "%LOG_PATH%"
+    :: Create repos_enhanced.txt if it doesn't exist
+    if not exist "%~dp0..\repos_enhanced.txt" (
+        echo Creating new repos_enhanced.txt file...
+        echo # Repository Categories Configuration > "%~dp0..\repos_enhanced.txt"
+        echo # Format: [CATEGORY_NAME] followed by repository paths >> "%~dp0..\repos_enhanced.txt"
+        echo # Empty lines and lines starting with # are ignored >> "%~dp0..\repos_enhanced.txt"
+        echo. >> "%~dp0..\repos_enhanced.txt"
+        echo [SCANNED_REPOSITORIES] >> "%~dp0..\repos_enhanced.txt"
+        echo %date% %time% - Created new repos_enhanced.txt file >> "%LOG_PATH%"
+    ) else (
+        :: Add a new category for scanned repos
+        echo. >> "%~dp0..\repos_enhanced.txt"
+        echo [SCANNED_REPOSITORIES_!date:~-4!_!time:~0,2!!time:~3,2!] >> "%~dp0..\repos_enhanced.txt"
     )
     
-    :: Add found repositories to repos.txt
+    :: Add found repositories to repos_enhanced.txt
     if exist "!temp_repos!" (
         for /f "usebackq delims=" %%a in ("!temp_repos!") do (
-            echo %%a >> "%~dp0..\repos.txt"
+            echo %%a >> "%~dp0..\repos_enhanced.txt"
             echo Added: %%a
-            echo %date% %time% - Added repository to repos.txt: %%a >> "%LOG_PATH%"
+            echo %date% %time% - Added repository to repos_enhanced.txt: %%a >> "%LOG_PATH%"
             set /a added_count+=1
         )
     )
     
     echo.
-    echo Successfully added !added_count! repositories to repos.txt
-    echo %date% %time% - Successfully added !added_count! repositories from scan to repos.txt >> "%LOG_PATH%"
+    echo Successfully added !added_count! repositories to repos_enhanced.txt
+    echo %date% %time% - Successfully added !added_count! repositories from scan to repos_enhanced.txt >> "%LOG_PATH%"
 ) else (
-    echo Skipping addition of repositories to repos.txt
+    echo Skipping addition of repositories to repos_enhanced.txt
     echo %date% %time% - User declined to add scanned repositories >> "%LOG_PATH%"
 )
 
