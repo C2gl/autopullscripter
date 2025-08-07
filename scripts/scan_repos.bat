@@ -1,12 +1,10 @@
 :: scan_repos.bat
-:: Script to scan a given folder path for Git repositories and populate repos.txt
+:: Script to scan a given folder path for Git repositories and populate repos_enhanced.txt
 @echo off
 setlocal enabledelayedexpansion
 
-:: Initialize logging    echo No new Git repositories found in the specified path.
-    if exist "%~dp0..\repos_enhanced.txt" (
-        echo All repositories in this path may already be in repos_enhanced.txt
-        echo %date% %time% - No new repositories found - all may already exist in repos_enhanced.txt >> "%LOG_PATH%"ho %date% %time% - Repository scanner started >> "%LOG_PATH%"
+:: Initialize logging
+echo %date% %time% - Repository scanner started >> "%LOG_PATH%"
 
 :: Enable error handling
 set "error_occurred=false"
@@ -170,9 +168,9 @@ echo %date% %time% - Scan completed. Found !repo_count! new repositories >> "%LO
 if !repo_count! equ 0 (
     echo.
     echo No new Git repositories found in the specified path.
-    if exist "%~dp0..\repos.txt" (
-        echo All repositories in this path may already be in repos.txt
-        echo %date% %time% - No new repositories found - all may already exist in repos.txt >> "%LOG_PATH%"
+    if exist "%~dp0..\repos_enhanced.txt" (
+        echo All repositories in this path may already be in repos_enhanced.txt
+        echo %date% %time% - No new repositories found - all may already exist in repos_enhanced.txt >> "%LOG_PATH%"
     ) else (
         echo No .git folders found in the specified path.
         echo Make sure the path contains Git repositories.
